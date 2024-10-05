@@ -1,3 +1,10 @@
+"""
+    File:        visualization.py
+    Author:      Ahmed Abdelrehim, Maheen Masoud, and Yifan Wu
+    Project:     CS 330 - Irish Tune Composer Recognition
+    Semester:    Fall 2024
+    Description: Visualize data with image and text
+"""
 from cs_senior_seminar import *
 
 import seaborn as sns
@@ -10,6 +17,13 @@ import warnings
 
 
 def scatterplot(features, labels, x_item, y_item):
+    """
+    Make a scatter plot with two specified dimensions
+
+    Keyword arguments:
+        features (list of dict): Keeps track of the features of the tunes to look at
+        labels (list): Labels that specify clusters of data points
+    """
     plot_data = pd.DataFrame(features)
 
     assert(x_item in plot_data), f"{x_item} is not in the data given"
@@ -20,6 +34,16 @@ def scatterplot(features, labels, x_item, y_item):
     # plt.show()
 
 def analyze_features(features, labels):
+    """
+    Group data points by cluster, calculating the means and standard deviations of each feature
+
+    Keyword arguments:
+        features (list of dict): Keeps track of the features of the tunes to look at
+        labels (list): Labels that specify clusters of data points
+
+    Returns: a dictionary that is indexed by cluster label and then feature name
+             For each feature within each cluster, the dictionary contains the mean and standard deviation            
+    """
     assert len(features) == len(labels)
     
     analysis = {}
@@ -49,6 +73,15 @@ def analyze_features(features, labels):
 
 
 def find_analysis(analysis, cluster_label, feature_name):
+    """
+    Prints out the average and standard deviation of a feature within a cluster
+
+    Keyword arguments:
+        analysis: dictionary that is output from analyze_features. Contains the mean and standard deviation 
+                  for each feature within each cluster
+        cluster_label: the cluster to look at
+        feature_name (string): the name of the feature to look at      
+    """
     mean,sd = analysis[cluster_label][feature_name]
 
     print(f"Looking at Cluster {cluster_label} and Feature {feature_name}")
