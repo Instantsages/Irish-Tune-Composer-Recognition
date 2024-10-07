@@ -13,10 +13,8 @@ import matplotlib.pyplot as plt
 
 import statistics
 
-import warnings
 
-
-def scatterplot(features, labels, x_item, y_item):
+def scatterplot_2items(features, labels, x_item, y_item):
     """
     Make a scatter plot with two specified dimensions
 
@@ -24,14 +22,24 @@ def scatterplot(features, labels, x_item, y_item):
         features (list of dict): Keeps track of the features of the tunes to look at
         labels (list): Labels that specify clusters of data points
     """
-    plot_data = pd.DataFrame(features)
-
+    tunes_list = []
+    for composer in features:
+        tunes_list.extend(features[composer])
+    
+    plot_data = pd.DataFrame(tunes_list)
+    
     assert(x_item in plot_data), f"{x_item} is not in the data given"
     assert(y_item in plot_data), f"{y_item} is not in the data given"
 
     sns.scatterplot(data = plot_data, x = x_item, y = y_item, hue = labels)
 
-    # plt.show()
+    for composer in features:
+        current_tunes = features[composer]
+
+        for tune in current_tunes:
+            plt.annotate(composer, (tune[x_item], tune[y_item]))
+
+    plt.show()
 
 def analyze_features(features, labels):
     """
@@ -101,12 +109,12 @@ def main():
 
     features = extract_features(midi_tunes)
     # print(json.dumps(features, indent=4))
-    dataset = create_dataset(features)
+    dataset, composers = create_dataset(features)
     # print(dataset)
 
-    labels = k_means_clustering(dataset, 2)
+    labels = k_means_clustering(dataset, 3)
 
-    scatterplot(features, labels, 'pitch_range', 'pitch_sd')
+    scatterplot_2items(features, labels, 'pitch_range', 'pitch_sd')
 
     feature_analysis = analyze_features(features, labels)
 

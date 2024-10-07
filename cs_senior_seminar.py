@@ -149,7 +149,13 @@ def create_dataset(features):
                 feature['total_duration'],
                 feature['avg_interval'],
                 feature['interval_range'],
-                feature['interval_sd']
+                feature['interval_sd'],
+                feature['contour_up'],
+                feature['contour_down'],
+                feature['note_density'],
+                feature['syncopation_ratio'],
+                feature['different_rhythms'],
+                feature['different_rhythms_ratio']
             ])
             composers.append(composer)
     dataset = np.array(dataset)
