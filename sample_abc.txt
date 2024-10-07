@@ -1,51 +1,165 @@
+composer: Sean Ryan
 X: 1
+T: The Reel Of Rio
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+|:GE|DEGA BABd|egg2 agef|gede gedB|AcBA GEE2|
+DEGA BABd|egg2 agef|gede gedB|AcBA G2:|
+|:Bc|dgg2 bgg2|bgag edBd|eBB2 GABd|e2dB AGEG|
+DEGA BABd|egg2 agef|gede gedB|AcBA G2:|
+
+composer: Sean Ryan
+X: 1
+T: Skipping Lambs
+R: reel
+M: 4/4
+L: 1/8
+K: Amaj
+|:F|~E3 F ABce|fc (3ccc ABce|a2 ga (3fga ec|dBcA BAFA|
+~E3 F ABce|fc (3ccc ABce|a2 ga (3fga ec|dcBd cA A:|
+|:e|a2 ga fdec|dBcA BAGA|~E3 F ABce|fc (3ccc ABce|
+a2 ga (3fga ec|dBcA BAFA|~E3 F ABce|(3fga ed cA A:|
+|:B|cA (3AAA eAce|aAgA fAec|~B3 c dcde|fB (3BBB fBdB|
+cA (3AAA eAce|aAgAfAec|~B3 c dcde|1 (3 fga ed cA A:|2 (3fga ed cB A(|F E3)||
+
+composer: Paddy Fahey
+X: 6
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Fmaj
+B2 dB DFBd|c=BcA FAcA|B2 dB DFBd|c=BcA _BGGA|
+BDGA BDGB|ADFA c2 =Bc|dgg2 dcBd|1 c=BcF DGGA:|2 c=BcF DGBd||
+g2 dg Bdge|f2 cf Acfa|g^fgd BcdB|dg^fa g3 a|
+bga^f gfdc|BdBG D2 FA|dgg2 dcBd|1 cBcF DGBd:|2 cBcF DGGA||
+
+composer: Paddy Fahey
+X: 2
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Ador
+AEED CEB,E|A,EED E/F/G AB|cded ^cdfd eaag edcB|
+AE E2 CEB,E|A,EED EGAB|cded cBAG EGDF EA, A,2||
+AEED cEBE|AEED E/F/G AB|cded ^cdfd|eaag edcB|
+AE E2 CEB,E|A,EED EGAB|cded cBAG|EGDF EA, A,2||
+eaag edcB|AE E2 cBcd|eged cBcd egdg egdg|
+ea a2 edcB|AE E2 c3 d|eged cBcd eaag egdg||
+eaag edcB|AE E2 cBcd|e/^f/g ed cBcd egdg egdg|
+ea a2 edcB|AE E2 c3 d|eged cBcd|eaag edcB||
+
+composer: Paddy Fahey
+X: 4
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+g2 dc BGDE|=F2 cF dFcF|DGBd g3 a gfde fgaf|
+gfdc BGDE|=F2 cF dFcF|DGBd g2 dc BdcA BG G2|
+g/a/g dc BGDE|=F2 cF dFcF|DGBd g3 a gfde fgaf|
+gfdc BGDE|=F2 cF dFcF|DGBd g2 dc|BdcA BGBd||
+g2 fa gbfa|g3 a gfde|fd (3e/d/c/d adeg fgag fdef|
+g2 fa gbfa|g3 a gfde|fd e/d/c/d adeg|fdcA G2 Bd3/2|
+g2 fa gbfa|g3 a gfde|fd (3e/d/c/d adeg fgag fdef|
+g2 fa gbfa|g3 a gfde|fd e/d/c/d adeg|fdcA DGBd||
+
+composer: Paddy Fahey
+X: 2
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+G2 dG BcdB|A=F F2 cFAF|G2 dG Bcdg fgag fdcA|
+G2 dG BcdB|A=F F2 cFAF|G2 dG Bcdg|fdcA G4||
+fgaf g2 ae|fgag fd d2|fgaf g2 ag|fdcA dggf|
+gbaf gfde|=f2 eg ^fdcA|dg g2 dgag|g2 ag fdcA||
+G2 dG BcdB|A=F F2 cFAF|G2 dG Bcdg fgag fdcA|
+G2 dG BcdB|A=F F2 cFAF|G2 dG Bcdg|fdcA G4||
+fgaf g2 ae|fgag fd d2|fgaf g2 ag|fdcA dggf|
+gbaf gfde|=f2 eg ^fdcA|dg g2 dgag|g2 ag fdcA||
+
+composer: Paddy Fahey
+X: 2
 T: Paddy Fahey's
 R: reel
 M: 4/4
 L: 1/8
 K: Dmaj
-D2-|:DEFG AGFD|(3EFG AB ~=c2Bc|Ad ~d2 Adad|eged cAGE|
-D2 (3EFG AG (3FED|(3EFG AB ~=c2Bc|Ad ~d2 Adfd|1 cAGE FDDA,:|2 cAGE FDD2||
-|:fgag fdAG|~F2 DF GE=CE|DFAd f2ed|(3Bcd ef g2ag|
-fgag fdAG|~F2 DF GE=CE|DFAd f2ed|1 cAGE FDD2:|2 cAGE FDDA,||
+A,DFD CEAG|FGEF D2 ag|fd d2 fded EGAG EG=cG|
+AGFD A,2 AG|FGEF D2 ag|fd d2 ADFA|G=CEG FD D2||
+A,DFD CEAG|FGEF D2 ag|fd d2 fded EGAG EG=cG|
+AGFD A,2 AG|FGEF D2 ag|fd d2 ADFA|G=CEG FD D2||
+f/g/a a^g afdf|gfed cA A2|gBdg fAdf gfed cA A2|
+faa^g afdf|gfef g2 ag|faeg fdAF|GECE D4||
+f/g/a a^g afdf|gfed cAAa|g2 eg fAdf gfed cA A2|
+faa^g afdf|g/a/g ef g2 ag|faeg fdAF|GECE D4||
 
-X: 11
+composer: Paddy Fahey
+X: 2
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Cmaj
+|: GFEG FECD | EFGA _B3 c | dcBd cBG2 |A/B/cdf ecdB | 
+GFE/F/G FECD | EFGA _B3 c |dcBd cBGE |1 FDB,D C4 :|2FDB,D C2 EG ||
+|: cdef gcac | gcec BGG_B | AFFE F_B,DF | EGcd BGFD |
+Gc ~c2 gcac | gcec BGG_B | AFFE FAdc |1 BGFD C2 EG :|2 BGFD C4 ||
+
+composer: Paddy Fahey
+X: 2
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+_BABd g3 d|BGFG BGdG|A=F F2 Ad^cd|BcAF DGGA|
+_BABd g3 d|BGFG BGdG|A=F F2 Ad^cd|BcAF DG G2|
+_BABd g3 d|BGFG BGdG|A=F F2 Ad^cd|BcAF DGGA|
+_BABd g3 d|BGFG BGdG|A=F F2 Ad^cd|BcAF DG G2||
+g3 fa g3 a|bgdg gfdc|BDGB ADFD|E/F/GBA GE E2|
+g3 fa g3 a|bgdg gfdc|BDGB ADFD|E/F/GBA A4|
+g3 fa g3 a|bgdg gfdc|BDGB ADFD|E/F/GBA GE E2|
+g3 fa g3 a|bgdg gfdc|BDGB ADFD|E/F/G B/c/d g4||
+
+composer: Paddy Fahey
+X: 2
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+DGGF GABd|g3 e fdcA|GFDE =FGAB|c/d/c Bd c=FAF|
+DGGF GABd|g/a/g eg fdcA|GFDE =FGAg|fdcA G4||
+g2 gf gbag|fd d2 acgf|dg g2 gbag|fdaf g2 ga|
+b/a/g af gfde|fgag fdcA|G2 GF GABd|g2 eg fdcA||
+DGGF GABd|g3 e fdcA|GFDE =FGAB|c/d/c Bd c=FAF|
+DGGF GABd|g/a/g eg fdcA|GFDE =FGAg|fdcA G4||
+g2 gf gbag|fd d2 acgf|dg g2 gbag|fdaf g2 ga|
+b/a/g af gfde|fgag fdcA|G2 GF GABd|g2 eg fdcA||
+
+composer: Paddy Fahey
+X: 1
 T: Paddy Fahey's
 R: reel
 M: 4/4
 L: 1/8
 K: Dmin
-|: D2A,D ~F3 G | AdcA d2de | ^fedf edcA | dcAG FDEC |
-D2A,D ~F3 G | AdcA d2de | ^fedf edcA | dcAG =FD D2 :|
-|: Ad (3ddd ad^fd | ~c3G E=FGB | Ad (3ddd da^fd | ~c3d edcA |
-a2ga AdcA | dcAG FDCE | D2A,D ~F3G |1 AdcA d3c :|2 AdcA d4 ||
-
-X:1
-T:Paddy Fahys reel [7]
-M:4/4
-L:1/8
-Q:220
-C:Paddy Fahy
-R:reel
-K:Gdor
-A ||: B2dB DGBd | ~c2cA FAcA | B2dB DGBd | ~c2cA BGGA |
-B2GA BDGB | AD^FD c2=Bc | dg~g2 dc=Bd |1 c=BcF DGGA :|2 c=BcF DG=Bd || 
-g^fgd Bcge | f2cf AcfA | g^fgd A=BcA |dg^fa ~g2ga |
-bga^f gfdc | (3=Bcd BG D2^FA | dgg2 dc=Bd|1 c=BcF DGBd :||2 c=BcF DGGA ||
-
-X: 1
-T: Paddy Fahey's
-R: reel
-M: 4/4
-L: 1/8
+F2 DE FAde|fedc AGFE|FA,DE FDGF|EGdG EGCE|
+DA,DE FAde|fece d3e|^fgag fdAG|F2EG FDD2|
+DA,DE FAde|fedc AGFE|F3D G3F|E/F/GdG EGCE|
+DA,DE FAde|fece d3e|^fgag fdAG|F2EG FDD2||
 K: Dmaj
-|:ADFA dcde|fged cAAg|fAdf g2 e/f/g|f/g/aed cAGE|
-ADFA d2Ad|fged cAag|fAdf g/a/ged|cAGE FDD2:|
-fgaf g/a/geg|fdAF D3=c|B~G3 BGAg|fged cdeg|
-fgaf gaeg|fdAF G2FG|A2GB Adfd|cAGE FDD2|
-fgaf g/a/geg|fdAF D3=c|B~G3 BGAg|fged cdeg|
-fgaf gaeg|fdAF G2FG|A~d3 aded|cAGE FDD2||
+|:fgag fdde|d=cAB cAG2|Addc defg|a2fd adge|
+fgag fdde|dcAG =c3A|d3e fged|cAGE D4:|
 
+composer: Paddy Fahey
 X: 2
 T: Paddy Fahey's
 R: reel
@@ -61,6 +175,59 @@ Bc/4B/4A/ Bd BDGB|AD^FA d2 dc|=B/c/d g^f gdBd|c2 =BG DG G2|
 [K:G] Bdgd adfd|Bdgd cAAc|B/c/d ad Bdgd c2 BA DG G2|
 B/c/d ad gdfd|Bdfa g3 a|bg a/4g/4f/g dcBd|c2 BG DG G2||
 
+composer: Paddy Fahey
+X: 1
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Dmaj
+|:ADFA dcde|fged cAAg|fAdf g2 e/f/g|f/g/aed cAGE|
+ADFA d2Ad|fged cAag|fAdf g/a/ged|cAGE FDD2:|
+fgaf g/a/geg|fdAF D3=c|B~G3 BGAg|fged cdeg|
+fgaf gaeg|fdAF G2FG|A2GB Adfd|cAGE FDD2|
+fgaf g/a/geg|fdAF D3=c|B~G3 BGAg|fged cdeg|
+fgaf gaeg|fdAF G2FG|A~d3 aded|cAGE FDD2||
+
+composer: Paddy Fahey
+X:1
+T:Paddy Fahys reel [7]
+M:4/4
+L:1/8
+Q:220
+C:Paddy Fahy
+R:reel
+K:Gdor
+A ||: B2dB DGBd | ~c2cA FAcA | B2dB DGBd | ~c2cA BGGA |
+B2GA BDGB | AD^FD c2=Bc | dg~g2 dc=Bd |1 c=BcF DGGA :|2 c=BcF DG=Bd || 
+g^fgd Bcge | f2cf AcfA | g^fgd A=BcA |dg^fa ~g2ga |
+bga^f gfdc | (3=Bcd BG D2^FA | dgg2 dc=Bd|1 c=BcF DGBd :||2 c=BcF DGGA ||
+
+composer: Paddy Fahey
+X: 11
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Dmin
+|: D2A,D ~F3 G | AdcA d2de | ^fedf edcA | dcAG FDEC |
+D2A,D ~F3 G | AdcA d2de | ^fedf edcA | dcAG =FD D2 :|
+|: Ad (3ddd ad^fd | ~c3G E=FGB | Ad (3ddd da^fd | ~c3d edcA |
+a2ga AdcA | dcAG FDCE | D2A,D ~F3G |1 AdcA d3c :|2 AdcA d4 ||
+
+composer: Paddy Fahey
+X: 1
+T: Paddy Fahey's
+R: reel
+M: 4/4
+L: 1/8
+K: Dmaj
+D2-|:DEFG AGFD|(3EFG AB ~=c2Bc|Ad ~d2 Adad|eged cAGE|
+D2 (3EFG AG (3FED|(3EFG AB ~=c2Bc|Ad ~d2 Adfd|1 cAGE FDDA,:|2 cAGE FDD2||
+|:fgag fdAG|~F2 DF GE=CE|DFAd f2ed|(3Bcd ef g2ag|
+fgag fdAG|~F2 DF GE=CE|DFAd f2ed|1 cAGE FDD2:|2 cAGE FDDA,||
+
+composer: Lizz Carrol
 X: 1
 T: The Chandelier
 R: reel
@@ -72,6 +239,7 @@ D2 (3DDD ADFG|A2FA dfed|cAAB cAed|1 cAGE ~F3E:|2 cAGE FABc||
 |:dfbf afeg|~f3d eABc|dfbf afeg|fedB cdeg|
 ~f3e de f/e/d|eAAA ABcA|B2GF GBdB|1 AFEG FABc:|2 AFEG F3E||
 
+composer: Lizz Carrol
 X: 6
 T: Wissahickon Drive
 R: reel
@@ -84,6 +252,7 @@ EFAB cBAB|ceef eAce|fagf eAcA|1 BEGB A2 AE:|2 BEGB A2 ce||
 [1a/b/a ga baga|fAde f/g/a gf|eAce aedc|BEGB ABce:|
 [2A2 ce ac'ba|fAde f/g/a gf|eAce aedc|BEGB A3 E||
 
+composer: Lizz Carrol
 X: 4
 T: Johnny Harling's
 R: reel
@@ -95,6 +264,7 @@ FA (3AAA AFEF|D2 GA BAgb|afed (3Bcd Ad|afeg fddz:|
 |:|fB (3BBB Bfbf|aA (3AAA dB (3BBB|bB (3BBB FB (3BBB|Acec B3 c|
 dFAd efaz|GFGA Bdgb|afed (3Bcd Af|afeg fedz:|
 
+composer: Lizz Carrol
 X: 4
 T: Merle's Tune
 R: reel
@@ -106,6 +276,7 @@ BFBc dBfe|defg aece|dAdf aece|aecf dB ~B2:|
 |:Bcdf bBgB|fBfb fBBA|Bcde aAfA|eAea eAcA|
 BFBc dBFB|defg aece|dAfd cAec|aecf dB~B2:|
 
+composer: Lizz Carrol
 X: 2
 T: The Cliff Dwellers
 R: reel
