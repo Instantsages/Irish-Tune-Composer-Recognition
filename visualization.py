@@ -52,25 +52,28 @@ def analyze_features(features, labels):
     Returns: a dictionary that is indexed by cluster label and then feature name
              For each feature within each cluster, the dictionary contains the mean and standard deviation            
     """
-    assert len(features) == len(labels)
     
     analysis = {}
 
-    # Organize data by cluster for analysis
-    for index in range(len(features)):
-        current_cluster = labels[index]
-        current_feature = features[index]
+    for composer in features:
 
-        if not current_cluster in analysis:
-            analysis[current_cluster] = {}
-        
-        for feature_name in current_feature:
-            if not feature_name in analysis[current_cluster]:
-                analysis[current_cluster][feature_name] = []
+        current_tunes = features[composer]
 
-            analysis[current_cluster][feature_name].append(current_feature[feature_name])
+        # Organize data by cluster for analysis
+        for index in range(len(current_tunes)):
+            current_cluster = labels[index]
+            current_feature = current_tunes[index]
 
-    # Keep track of the mean and sd within each group
+            if not current_cluster in analysis:
+                analysis[current_cluster] = {}
+            
+            for feature_name in current_feature:
+                if not feature_name in analysis[current_cluster]:
+                    analysis[current_cluster][feature_name] = []
+
+                analysis[current_cluster][feature_name].append(current_feature[feature_name])
+
+        # Keep track of the mean and sd within each group
     for current_cluster in analysis:
         current_feature = analysis[current_cluster]
 
@@ -118,9 +121,9 @@ def main():
 
     feature_analysis = analyze_features(features, labels)
 
-    # for cluster_label in feature_analysis:
-    #     for feature_name in feature_analysis[cluster_label]:
-    #         find_analysis(feature_analysis, cluster_label, feature_name)
+    for cluster_label in feature_analysis:
+        for feature_name in feature_analysis[cluster_label]:
+            find_analysis(feature_analysis, cluster_label, feature_name)
 
 
 
