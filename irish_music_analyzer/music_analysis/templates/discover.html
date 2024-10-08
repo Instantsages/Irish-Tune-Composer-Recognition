@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}  <!-- Load the static files -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Music</title>
+    <link rel="stylesheet" href="{% static 'music_analysis/css/discover.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Discover Musical Features</h1>
+        <p>Select one feature for each axis (X, Y, and Z):</p>
+
+        <!-- Dropdown for X-axis selection -->
+        <div>
+            <label for="x-axis">X-Axis:</label>
+            <select id="x-axis">
+                <option value="">Select a feature</option>
+                <option value="notes">Notes</option>
+                <option value="rests">Rests</option>
+                <option value="chords">Chords</option>
+                <option value="avg_pitch">Avg. Pitch</option>
+                <option value="pitch_range">Pitch Range</option>
+                <option value="pitch_sd">Pitch Standard Deviation</option>
+                <option value="pitches_len">Pitches Length</option>
+                <option value="avg_duration">Avg. Duration</option>
+                <option value="duration_range">Duration Range</option>
+                <option value="duration_sd">Duration Standard Deviation</option>
+                <option value="total_duration">Total Duration</option>
+                <option value="avg_interval">Avg. Interval</option>
+                <option value="interval_range">Interval Range</option>
+                <option value="interval_sd">Intreval Standard Deviation</option>
+            </select>
+        </div>
+
+        <!-- Dropdown for Y-axis selection -->
+        <div>
+            <label for="y-axis">Y-Axis:</label>
+            <select id="y-axis">
+                <option value="">Select a feature</option>
+                <option value="notes">Notes</option>
+                <option value="rests">Rests</option>
+                <option value="chords">Chords</option>
+                <option value="avg_pitch">Avg. Pitch</option>
+                <option value="pitch_range">Pitch Range</option>
+                <option value="pitch_sd">Pitch Standard Deviation</option>
+                <option value="pitches_len">Pitches Length</option>
+                <option value="avg_duration">Avg. Duration</option>
+                <option value="duration_range">Duration Range</option>
+                <option value="duration_sd">Duration Standard Deviation</option>
+                <option value="total_duration">Total Duration</option>
+                <option value="avg_interval">Avg. Interval</option>
+                <option value="interval_range">Interval Range</option>
+                <option value="interval_sd">Intreval Standard Deviation</option>
+            </select>
+        </div>
+
+        <!-- Dropdown for Z-axis selection -->
+        <div>
+            <label for="z-axis">Z-Axis:</label>
+            <select id="z-axis">
+                <option value="">Select a feature</option>
+                <option value="notes">Notes</option>
+                <option value="rests">Rests</option>
+                <option value="chords">Chords</option>
+                <option value="avg_pitch">Avg. Pitch</option>
+                <option value="pitch_range">Pitch Range</option>
+                <option value="pitch_sd">Pitch Standard Deviation</option>
+                <option value="pitches_len">Pitches Length</option>
+                <option value="avg_duration">Avg. Duration</option>
+                <option value="duration_range">Duration Range</option>
+                <option value="duration_sd">Duration Standard Deviation</option>
+                <option value="total_duration">Total Duration</option>
+                <option value="avg_interval">Avg. Interval</option>
+                <option value="interval_range">Interval Range</option>
+                <option value="interval_sd">Intreval Standard Deviation</option>
+            </select>
+        </div>
+
+        <!-- Error message placeholder -->
+        <p id="error-message" style="color: red; display: none;">You must select exactly three features (one for each axis).</p>
+
+        <!-- Button to trigger graph update -->
+        <button onclick="plotGraph()">Show 3D Scatter Plot</button>
+
+        <!-- Graph Container -->
+        <div id="graph-container" style="width: 98%; height: 500px;"></div>
+
+    </div>
+
+    <script>
+        // Function to plot the 3D scatter graph based on selected features with AJAX
+        function plotGraph() {
+            // Get selected features for X, Y, and Z axes
+            let xFeature = document.getElementById('x-axis').value;
+            let yFeature = document.getElementById('y-axis').value;
+            let zFeature = document.getElementById('z-axis').value;
+
+            // Restrict to exactly three features (one for X, one for Y, and one for Z)
+            if (xFeature === '' || yFeature === '' || zFeature === '') {
+                // Show error message if all three features are not selected
+                document.getElementById('error-message').style.display = 'block';
+                return;  // Stop the function execution
+            } else {
+                // Hide error message if selection is valid
+                document.getElementById('error-message').style.display = 'none';
+            }
+
+            // Send the selected features to the backend via AJAX
+            fetch('/get-musical-features/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ xFeature: xFeature, yFeature: yFeature, zFeature: zFeature })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous graph
+                document.getElementById('graph-container').innerHTML = '';
+
+                // Plot the 3D scatter plot
+                let trace = {
+                    x: data.x,  // X-axis values (for the selected X-axis feature)
+                    y: data.y,  // Y-axis values (for the selected Y-axis feature)
+                    z: data.z,  // Z-axis values (for the selected Z-axis feature)
+                    mode: 'markers',
+                    type: 'scatter3d',
+                    marker: {
+                        size: 5,
+                        color: data.composerColorMapping,  // Use the values of the selected color feature for coloring
+                        colorscale: 'Viridis',  // Choose a color scale (you can customize this)
+                    },
+                    name: `${xFeature} vs ${yFeature} vs ${zFeature}`,
+                    text: data.labels,  // Use tune names for labels
+                    hoverinfo: 'text'  // Show tune names when hovering
+                };
+
+                // Define the layout of the graph
+                let layout = {
+                    title: `${xFeature.charAt(0).toUpperCase() + xFeature.slice(1)} vs ${yFeature.charAt(0).toUpperCase() + yFeature.slice(1)} vs ${zFeature.charAt(0).toUpperCase() + zFeature.slice(1)}`,
+                    scene: {
+                        xaxis: { title: xFeature.charAt(0).toUpperCase() + xFeature.slice(1) },
+                        yaxis: { title: yFeature.charAt(0).toUpperCase() + yFeature.slice(1) },
+                        zaxis: { title: zFeature.charAt(0).toUpperCase() + zFeature.slice(1) }
+                    }
+                };
+
+                // Render the 3D scatter plot in the graph-container div
+                Plotly.newPlot('graph-container', [trace], layout);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+    </script>
+
+
+   
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}  <!-- Load the static files -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Dashboard</title>
+    <link rel="stylesheet" href="{% static 'music_analysis/css/dashboard.css' %}">
+</head>
+<body>
+
+    <div class="header"></div>
+        <div class="header-right">
+            <button class="btn btn-signin">Sign In</button>
+            <button class="btn btn-signup">Sign Up</button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'music_analysis/images/logo.png' %}" alt="Logo" class="logo-img"> 
+            <h1 class="website-name">Irish Tuner</h1>
+        </div>
+        <ul>
+            <li>
+                <img src="{% static 'music_analysis/images/home_icon.png' %}" alt="Home" class="sidebar-icon">
+                <a href="{% url 'music_dashboard' %}">Home</a>
+            </li>
+            <li>
+                <img src="{% static 'music_analysis/images/discover_icon.png' %}" alt="Discover" class="sidebar-icon">
+                <a href="{% url 'discover' %}">Discover</a>  <!-- Link to the discover view -->
+            </li>            
+            <li>
+                <img src="{% static 'music_analysis/images/songs_icon.png' %}" alt="Songs" class="sidebar-icon">
+                <a href="{% url 'tunes' %}">Tunes</a>
+            </li>
+            <li>
+                <img src="{% static 'music_analysis/images/playlist_icon.png' %}" alt="Playlists" class="sidebar-icon">
+                <a href="#">Playlists</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2>AI For Irish Music!</h2>
+        <div class="placeholder">[Place Tunes Player Here]</div>
+    </div>
+
+</body>
+</html>
