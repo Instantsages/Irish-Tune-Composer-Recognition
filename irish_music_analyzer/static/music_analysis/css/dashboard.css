@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #000;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    width: calc(100% - 250px); /* Adjust header width to start from sidebar's right boundary */
+    left: 290px;               /* Make the header start after the sidebar */
+    top: 0;
+    z-index: 100;
+    height: 50px;
+    box-sizing: border-box;
+    border-left: 1px solid #2d3748;  /* Thin boundary only on the right side */
+
+}
+
+.header-right {
+    gap: 10px;  /* Add space between the buttons */
+}
+
+.btn {
+    background-color: #1e1e1e;
+    border: 1px solid #888;
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-signin {
+    background-color: #4CAF50;  /* Green for Sign In */
+}
+
+.btn-signup {
+    background-color: #008CBA;  /* Blue for Sign Up */
+}
+
+.btn:hover {
+    background-color: #333;  /* Slightly darker on hover */
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #000000;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    border-right: 1px solid #2d3748;  /* Thin boundary only on the right side */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+}
+
+.logo-img {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.website-name {
+    color: white;
+    font-size: 30px;
+    margin: 0;
+    text-align: left;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.sidebar ul li img.sidebar-icon {
+    width: 20px;   /* Adjust the size of the icon */
+    height: auto;
+    margin-right: 20px;  /* Space between icon and text */
+    margin-left: 8px;  /* Space between icon and left boundary */
+}
+
+.sidebar ul li a {
+    color: #cbd5e0;
+    text-decoration: none;
+}
+
+.main-content {
+    margin-left: 270px;
+    padding: 20px;
+}
+
+.main-content h2 {
+    background-color: #ffffff;  /* Change this color to whatever you like */
+    color: rgb(0, 0, 0);            /* Text color to contrast with the background */
+    padding: 10px;           /* Add some padding for better spacing */
+    border-radius: 4px;      /* Optional: Rounded corners */
+    display: inline-block;   /* Make sure the background wraps only around the text */
+    margin-left: 40px;       /* Adjust the margin to align with the sidebar */
+    margin-top: 40px;        /* Adjust the margin to align with the header */
+    font-size: 50px;
+}
+
+.placeholder {
+    background-color: #555;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}

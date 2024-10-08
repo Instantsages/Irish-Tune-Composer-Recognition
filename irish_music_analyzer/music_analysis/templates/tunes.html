@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}  <!-- Load the static files -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tunes</title>
+    <link rel="stylesheet" href="{% static 'music_analysis/css/tunes.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tunes List</h1>
+
+        <!-- List of tunes -->
+        <ul>
+            {% for tune in tunes %}
+                <li>
+                    <span><strong>{{ tune.name }}</strong> by {{ tune.composer }}</span>
+                    <div>
+                        <a href="?edit={{ tune.pk }}">Edit</a>
+                        <a href="?delete={{ tune.pk }}">Delete</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Form for Creating or Updating Tunes -->
+        {% if not delete_id %}
+            <h2>{% if tune_id %}Edit Tune{% else %}Add New Tune{% endif %}</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">
+                    {% if tune_id %}Update{% else %}Create{% endif %}
+                </button>
+            </form>
+        {% endif %}
+
+        <!-- Delete Confirmation -->
+        {% if delete_id %}
+            <h2>Are you sure you want to delete this tune?</h2>
+            <form action="?delete={{ delete_id }}" method="POST">
+                {% csrf_token %}
+                <button type="submit">Yes, delete</button>
+                <a href="{% url 'tunes' %}" class="button-link">Cancel</a>
+            </form>
+        {% endif %}
+    </div>
+
+    <!-- Home Button with Logo -->
+    <a href="{% url 'music_dashboard' %}" class="home-button">
+        <img src="{% static 'music_analysis/images/home-icon.png' %}" alt="Home">
+    </a>
+
+
+</body>
+</html>
