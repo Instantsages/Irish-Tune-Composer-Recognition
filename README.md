@@ -36,7 +36,7 @@ This project is a web-based platform designed to analyze Irish music tunes. User
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/irish-music-analyzer.git
+git clone https://github.com/Instantsages/Irish-Tune-Composer-Recognition.git
 source myenv/bin/activate
 cd irish-music-analyzer
 python manage.py runserver 
