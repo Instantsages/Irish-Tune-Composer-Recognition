@@ -39,6 +39,8 @@ def scatterplot_2items(features, labels, x_item, y_item):
         for tune in current_tunes:
             plt.annotate(composer, (tune[x_item], tune[y_item]))
 
+    print(f"Displaying features: {x_item}, {y_item}. \n")
+
     plt.show()
 
 def analyze_features(features, labels):
@@ -73,7 +75,7 @@ def analyze_features(features, labels):
 
                 analysis[current_cluster][feature_name].append(current_feature[feature_name])
 
-        # Keep track of the mean and sd within each group
+    # Keep track of the mean and sd within each group
     for current_cluster in analysis:
         current_feature = analysis[current_cluster]
 
@@ -99,31 +101,42 @@ def find_analysis(analysis, cluster_label, feature_name):
     print(f"Mean: {mean}")
     print(f"Standard Deviation: {sd}\n")
 
-def main():
+
+   
+
+
+
+def demo():
     input_file = 'sample_abc.txt'
-    output_file = 'result.txt'
 
     abc_tunes = read_abcs(input_file)
-    #print(abc_tunes)
     midi_tunes = convert_abc_to_midi(abc_tunes)
 
-    # midi = abc_to_midi(input_file, output_file)
-    # #print(midi)
-
     features = extract_features(midi_tunes)
-    # print(json.dumps(features, indent=4))
     dataset, composers = create_dataset(features)
     # print(dataset)
 
     labels = k_means_clustering(dataset, 3)
 
-    scatterplot_2items(features, labels, 'pitch_range', 'pitch_sd')
+    scatterplot_2items(features, labels, 'notes', 'pitch_sd')
+    scatterplot_2items(features, labels, 'different_rhythms', 'contour_up')
 
     feature_analysis = analyze_features(features, labels)
+
+    find_analysis(feature_analysis, 0, "notes")
+    
+    input("Push enter to continue \n")
 
     for cluster_label in feature_analysis:
         for feature_name in feature_analysis[cluster_label]:
             find_analysis(feature_analysis, cluster_label, feature_name)
+
+def main():
+    demo()
+
+    # for cluster_label in feature_analysis:
+    #     for feature_name in feature_analysis[cluster_label]:
+    #         find_analysis(feature_analysis, cluster_label, feature_name)
 
 
 
