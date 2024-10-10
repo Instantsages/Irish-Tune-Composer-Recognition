@@ -215,7 +215,7 @@ def visualize_clusters(dataset, labels, composers):
 
 def main():
     input_file = 'sample_abc.txt'
-    output_file = '/Users/maheen/Desktop/cs senior seminar/result.txt'
+    output_file = 'result.txt'
 
     abc_tunes = read_abcs(input_file)
 
