@@ -8,8 +8,8 @@ from sklearn.decomposition import PCA
 
 
 FEATURES = ['notes', 
-            'rests', 
-            'chords', 
+            #'rests', 
+            #'chords', 
             'avg_pitch', 
             'pitch_range', 
             'pitch_sd', 
@@ -41,19 +41,19 @@ def abc_to_midi(input_file: str, output_file: str):
 
     return abc_to_midi
 
-def extract_features(midi_tunes):
+def extract_features(midi_tunes, feature_names = FEATURES):
     '''takes in a dictionary of composer to list of midi tunes'''
     features = {}
     for composer, midi_tunes in midi_tunes.items():
         for midi_tune in midi_tunes:
-            feature = extract_feature(midi_tune)
+            feature = extract_feature(midi_tune, feature_names)
             if composer not in features:
                 features[composer] = [feature]
             else:
                 features[composer].append(feature)
     return features
 
-def extract_feature(midi_format):
+def extract_feature(midi_format, feature_names = FEATURES):
     pitches = []
     durations = []
     rests = 0
@@ -122,7 +122,7 @@ def extract_feature(midi_format):
 
     features = {}
     
-    for feature_name in FEATURES:
+    for feature_name in feature_names:
         features[feature_name] = eval(feature_name)
 
     return features
@@ -220,13 +220,12 @@ def main():
     features = extract_features(midi_tunes)
     #print(json.dumps(features, indent=4))
     dataset, composers = create_dataset(features)
-    # print(dataset, cmposers)
+    print(dataset)
 
     num_composers = 3
     labels = k_means_clustering(dataset, num_composers)
-    print(labels)
 
-    visualize_clusters(dataset, labels, composers)
+    # visualize_clusters(dataset, labels, composers)
 
 
 
