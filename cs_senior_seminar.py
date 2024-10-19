@@ -6,6 +6,30 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
+
+FEATURES = ['notes', 
+            'rests', 
+            'chords', 
+            'avg_pitch', 
+            'pitch_range', 
+            'pitch_sd', 
+            'pitches_len',
+            'avg_duration',
+            'duration_range',
+            'duration_sd',
+            'total_duration',
+            'avg_interval',
+            'interval_range',
+            'interval_sd',
+            'contour_up',
+            'contour_down',
+            'note_density',
+            'syncopation_ratio',
+            'different_rhythms',
+            'different_rhythms_ratio'
+           ]
+
+
 def abc_to_midi(input_file: str, output_file: str):
     with open(input_file, 'r') as file:
         abc_content = file.read()
@@ -96,30 +120,13 @@ def extract_feature(midi_format):
     different_rhythms = len(set(rhytimic_features))
     different_rhythms_ratio = different_rhythms / len(rhytimic_features) if rhytimic_features else 0
 
-    features = {
-        'notes': notes,
-        'rests': rests,
-        'chords': chords,
-        'avg_pitch': avg_pitch,
-        'pitch_range': pitch_range,
-        'pitch_sd': pitch_sd,
-        'pitches_len': pitches_len,
-        'avg_duration': avg_duration,
-        'duration_range': duration_range,
-        'duration_sd': duration_sd,
-        'total_duration': total_duration,
-        'avg_interval': avg_interval,
-        'interval_range': interval_range,
-        'interval_sd': interval_sd,
-        'contour_up': contour_up,
-        'contour_down': contour_down,
-        'note_density': note_density,
-        'syncopation_ratio': syncopation_ratio,
-        'different_rhythms': different_rhythms,
-        'different_rhythms_ratio': different_rhythms_ratio,
-    }
+    features = {}
+    
+    for feature_name in FEATURES:
+        features[feature_name] = eval(feature_name)
 
     return features
+
 
 def k_means_clustering(dataset, n_clusters):
     kmeans = KMeans(n_clusters=n_clusters)
@@ -192,20 +199,7 @@ def visualize_clusters(dataset, labels, composers):
     plt.legend()
     plt.show()
 
-
-def experiment(input_file = 'sample_abc.txt', output_file = 'result.txt'):
-
-    abc_tunes = read_abcs(input_file)
-
-    midi_tunes = convert_abc_to_midi(abc_tunes)
-
-    features = extract_features(midi_tunes)
-    dataset, composers = create_dataset(features)
-
-    num_composers = 3
-    labels = k_means_clustering(dataset, num_composers)
-
-    pass
+    
     
 
 
