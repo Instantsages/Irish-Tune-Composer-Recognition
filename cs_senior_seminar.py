@@ -210,9 +210,9 @@ def main():
 
     abc_tunes = read_abcs(input_file)
 
-    print(abc_tunes)
+    # print(abc_tunes)
     midi_tunes = convert_abc_to_midi(abc_tunes)
-    print(len(midi_tunes))
+    # print(len(midi_tunes))
 
     # midi = abc_to_midi(input_file, output_file)
     # #print(midi)
