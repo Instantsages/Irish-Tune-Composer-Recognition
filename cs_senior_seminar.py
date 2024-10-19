@@ -135,28 +135,7 @@ def create_dataset(features):
     composers = []
     for composer, features in features.items():
         for feature in features:
-            dataset.append([
-                feature['notes'],
-                feature['rests'],
-                feature['chords'],
-                feature['avg_pitch'],
-                feature['pitch_range'],
-                feature['pitch_sd'],
-                feature['pitches_len'],
-                feature['avg_duration'],
-                feature['duration_range'],
-                feature['duration_sd'],
-                feature['total_duration'],
-                feature['avg_interval'],
-                feature['interval_range'],
-                feature['interval_sd'],
-                feature['contour_up'],
-                feature['contour_down'],
-                feature['note_density'],
-                feature['syncopation_ratio'],
-                feature['different_rhythms'],
-                feature['different_rhythms_ratio']
-            ])
+            dataset.append([feature[feature_name] for feature_name in feature])
             composers.append(composer)
     dataset = np.array(dataset)
     return dataset, composers
@@ -212,6 +191,24 @@ def visualize_clusters(dataset, labels, composers):
     plt.ylabel('PCA Component 2')
     plt.legend()
     plt.show()
+
+
+def experiment(input_file = 'sample_abc.txt', output_file = 'result.txt'):
+
+    abc_tunes = read_abcs(input_file)
+
+    midi_tunes = convert_abc_to_midi(abc_tunes)
+
+    features = extract_features(midi_tunes)
+    dataset, composers = create_dataset(features)
+
+    num_composers = 3
+    labels = k_means_clustering(dataset, num_composers)
+
+    pass
+    
+
+
 
 def main():
     input_file = 'sample_abc.txt'
