@@ -7,17 +7,17 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 
-FEATURES = ['notes', 
+FEATURES = [#'notes', 
             #'rests', 
             #'chords', 
             'avg_pitch', 
             'pitch_range', 
             'pitch_sd', 
-            'pitches_len',
+            #'pitches_len',
             'avg_duration',
             'duration_range',
             'duration_sd',
-            'total_duration',
+            #'total_duration',
             'avg_interval',
             'interval_range',
             'interval_sd',
@@ -199,13 +199,8 @@ def visualize_clusters(dataset, labels, composers):
     plt.legend()
     plt.show()
 
-    
-    
-
-
-
 def main():
-    input_file = 'sample_abc.txt'
+    input_file = 'abc.txt'
     output_file = 'result.txt'
 
     abc_tunes = read_abcs(input_file)
@@ -222,10 +217,10 @@ def main():
     dataset, composers = create_dataset(features)
     print(dataset)
 
-    num_composers = 3
+    num_composers = 5
     labels = k_means_clustering(dataset, num_composers)
 
-    # visualize_clusters(dataset, labels, composers)
+    visualize_clusters(dataset, labels, composers)
 
 
 
