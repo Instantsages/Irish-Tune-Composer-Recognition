@@ -2,7 +2,7 @@ from cs_senior_seminar import *
 
 from itertools import chain, combinations
 
-from sklearn.metrics import rand_score
+from sklearn.metrics import adjusted_rand_score
 
 import heapq
 
@@ -44,7 +44,7 @@ def experiment_features(input_file = 'sample_abc.txt', output_file = 'results.tx
 
     result_heap = []
 
-    last_popped = 0
+    last_popped = float('-inf')
 
     for i, current_set in enumerate(power_features):
         features = extract_features(midi_tunes, list(current_set))
@@ -54,7 +54,7 @@ def experiment_features(input_file = 'sample_abc.txt', output_file = 'results.tx
         num_composers = 3
         labels = k_means_clustering(dataset, num_composers)
 
-        rand_index = rand_score(composers, labels)
+        rand_index = adjusted_rand_score(composers, labels)
 
         if rand_index > last_popped:
             print(f"Tested subset {i} with rand index {rand_index}; pushed to heap")
@@ -75,7 +75,7 @@ def main():
     # CITE: https://stackoverflow.com/questions/14463277/how-to-disable-python-warnings
     # HELP: Learned how to suppress warnings
     with warnings.catch_warnings(action="ignore"):
-        experiment_features()
+        experiment_features(input_file = "abc.txt", output_file = 'results_1103.txt', first_k = 300)
 
 
 
