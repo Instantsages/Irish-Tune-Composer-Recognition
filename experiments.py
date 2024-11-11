@@ -1,6 +1,6 @@
 """
     File:        experiments.py
-    Author:      Ahmed Abdelrehim, Maheen Masoud, and Yifan Wu
+    Author:      Yifan Wu
     Project:     CS 330 - Irish Tune Composer Recognition
     Semester:    Fall 2024
     Description: Conducts experiments for k-means clustering

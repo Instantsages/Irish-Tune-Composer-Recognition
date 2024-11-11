@@ -1,6 +1,6 @@
 """
     File:        visualization.py
-    Author:      Ahmed Abdelrehim, Maheen Masoud, and Yifan Wu
+    Authors:     Ahmed Abdelrehim, Maheen Masoud, and Yifan Wu
     Project:     CS 330 - Irish Tune Composer Recognition
     Semester:    Fall 2024
     Description: Visualize data with image and text
