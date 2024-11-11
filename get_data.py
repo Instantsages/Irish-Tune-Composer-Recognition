@@ -1,6 +1,14 @@
+"""
+    File:        get_data.py
+    Author:      Yifan Wu
+    Project:     CS 330 - Irish Tune Composer Recognition
+    Semester:    Fall 2024
+    Description: Visualize data with image and text
+"""
+
+
 import pandas as pd
 import re
-
 
 def convert_to_txt(dest, source = "Tunes_Found.csv"):
     tunes_data = pd.read_csv(source)
