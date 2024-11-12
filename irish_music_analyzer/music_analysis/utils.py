@@ -12,6 +12,20 @@ def extract_key_signature(abc_notation):
     return 200
 
 def processing_pipeline(tunes_tuples):
+    """
+    Processes a list of tunes, extracting musical features from each ABC notation.
+
+    Parameters:
+    -----------
+    tunes_tuples : list of tuples
+        Each tuple contains (tune_name, tune_composer, abc_notation).
+
+    Returns:
+    --------
+    dict
+        A dictionary where each key is a tune name, and each value is a dictionary of extracted features, 
+        including the tune's composer.
+    """
     tunes_extracted_features = {}
     for tune_name, tune_composer, abc_notation in tunes_tuples:
         midi = converter.parse(abc_notation)
@@ -22,6 +36,20 @@ def processing_pipeline(tunes_tuples):
     return tunes_extracted_features
 
 def extract_features(midi_format):
+    """
+    Extracts musical features from a MIDI format object.
+
+    Parameters:
+    -----------
+    midi_format : music21.stream.Score
+        The parsed MIDI object from an ABC notation.
+
+    Returns:
+    --------
+    dict
+        A dictionary of extracted features, including counts of notes, rests, chords, 
+        and statistical data on pitch, duration, and intervals.
+    """
     pitches = []
     durations = []
     rests = 0
