@@ -13,15 +13,76 @@ import pandas as pd
 import json
 
 def index(request):
+    """
+    Displays a welcome message for the Irish Music Analyzer.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object.
+
+    Returns:
+    --------
+    HttpResponse
+        A simple HTTP response with a welcome message.
+    """
     return HttpResponse("Hello, welcome to the Irish Music Analyzer!")
 
+
 def music_dashboard(request):
+    """
+    Renders the main music dashboard page.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object.
+
+    Returns:
+    --------
+    HttpResponse
+        Renders the 'dashboard.html' template.
+    """
     return render(request, 'dashboard.html')  # Make sure to create this template
 
+
 def discover(request):
+    """
+    Renders the discover page for exploring musical features.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object.
+
+    Returns:
+    --------
+    HttpResponse
+        Renders the 'discover.html' template.
+    """
     return render(request, 'discover.html')
 
+
 def tunes(request):
+    """
+    Manages the display, creation, updating, and deletion of tunes.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object, containing POST data for creating or updating tunes,
+        and optional 'edit' or 'delete' parameters in the query string.
+
+    Returns:
+    --------
+    HttpResponse
+        Renders the 'tunes.html' template, with context including:
+            - 'tunes': List of all tunes.
+            - 'form': TuneForm instance for creating or editing a tune.
+            - 'tune_id': ID of the tune being edited, if any.
+            - 'tunes_data_json': JSON-encoded data of all tunes.
+            - 'delete_id': ID of the tune to be deleted, if any.
+    """
     # List all tunes (Read)
     tunes = Tune.objects.all()
 
@@ -77,7 +138,24 @@ def tunes(request):
         'delete_id': delete_id
     })
 
+
 def tunes_add(request):
+    """
+    Adds a new tune using a form, returning JSON for AJAX requests.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object, expected to contain form data for POST requests.
+
+    Returns:
+    --------
+    JsonResponse
+        If the request is POST and form validation succeeds, returns JSON with success status.
+        If validation fails, returns JSON with form HTML including error messages.
+    HttpResponse
+        Renders the add form template for GET requests.
+    """
     if request.method == 'POST':
         form = TuneForm(request.POST)
         if form.is_valid():
@@ -91,7 +169,26 @@ def tunes_add(request):
         form = TuneForm()
     return render(request, 'tunes_form_partial.html', {'form': form})
 
+
 def tunes_edit(request, pk):
+    """
+    Edits a specific tune by primary key (pk) using a form, returning JSON for AJAX requests.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object, expected to contain form data for POST requests.
+    pk : int
+        The primary key of the tune to be edited.
+
+    Returns:
+    --------
+    JsonResponse
+        If the request is POST and form validation succeeds, returns JSON with success status.
+        If validation fails, returns JSON with form HTML including error messages.
+    HttpResponse
+        Renders the edit form template for GET requests.
+    """
     tune = get_object_or_404(Tune, pk=pk)
     if request.method == 'POST':
         form = TuneForm(request.POST, instance=tune)
@@ -106,7 +203,25 @@ def tunes_edit(request, pk):
         form = TuneForm(instance=tune)
     return render(request, 'tunes_form_partial.html', {'form': form, 'tune': tune})
 
+
 def tunes_delete(request, pk):
+    """
+    Handles the deletion of a specific tune by primary key (pk).
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object, expected to be a POST request for deletion confirmation.
+    pk : int
+        The primary key of the tune to be deleted.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response indicating success and the primary key of the deleted tune if the request method is POST.
+    HttpResponse
+        Renders a confirmation template if the request method is not POST.
+    """
     print("Trying to delete tune")
     tune = get_object_or_404(Tune, pk=pk)
     if request.method == 'POST':
@@ -114,8 +229,27 @@ def tunes_delete(request, pk):
         return JsonResponse({'success': True, 'pk': pk})
     return render(request, 'tunes_confirm_delete_partial.html', {'tune': tune})
 
+
 @csrf_exempt
 def get_musical_features_data(request):
+    """
+    Retrieves musical features for tunes based on selected X, Y, and Z features, returning data for 3D plotting.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP POST request containing JSON data with selected 'xFeature', 'yFeature', and 'zFeature' keys.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response containing:
+            - 'x': List of values for the selected X feature.
+            - 'y': List of values for the selected Y feature.
+            - 'z': List of values for the selected Z feature.
+            - 'labels': List of tune names for labeling.
+            - 'composerColorMapping': List of color mappings based on composer names.
+    """
     if request.method == 'POST':
         # Parse the JSON body to get selected X, Y, and Z features
         body = json.loads(request.body)
@@ -163,7 +297,26 @@ def get_musical_features_data(request):
             'composerColorMapping': colors
         })
     
+
 def perform_clustering(request):
+    """
+    Performs k-means clustering on tunes based on selected features, returning cluster assignments and feature data.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP POST request containing JSON data with selected 'xFeature', 'yFeature', and 'zFeature' keys.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response containing:
+            - 'x': List of values for the selected X feature.
+            - 'y': List of values for the selected Y feature.
+            - 'z': List of values for the selected Z feature.
+            - 'clusters': List of cluster assignments for each tune.
+            - 'composers': List of composer names for labeling data points.
+    """
     if request.method == 'POST':
         # Parse the JSON body to get selected X, Y, and Z features
         body = json.loads(request.body)
@@ -209,7 +362,23 @@ def perform_clustering(request):
 
         return JsonResponse(response_data)
     
+
 def calculate_feature_correlation(request):
+    """
+    Calculates the correlation matrix for numerical features extracted from all tunes, returning it as JSON.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP POST request.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response containing:
+            - 'correlation_data': A dictionary representing the correlation matrix of numerical features.
+            - 'feature_names': A list of feature names included in the correlation matrix for labeling.
+    """
     if request.method == 'POST':
         # Fetch all tunes
         tunes = Tune.objects.all()
@@ -235,12 +404,26 @@ def calculate_feature_correlation(request):
             'feature_names': list(correlation_matrix.columns)  # Include feature names for labeling
         })
     
+
 def search_tunes(request):
+    """
+    Searches for tunes by name or composer based on a query, returning results as JSON for AJAX requests.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP GET request containing 'type' (search type) and 'query' parameters, and expected to be
+        an AJAX request.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response with a list of matching tunes, each containing its name, composer, edit URL,
+        and delete URL.
+    """
     if request.method == 'GET' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         search_type = request.GET.get('type')
         query = request.GET.get('query', '')
-
-        #print(f"Search type: {search_type}, Query: {query}")
 
         # Filter tunes based on search type
         if search_type == 'name':
@@ -261,14 +444,41 @@ def search_tunes(request):
             for tune in tunes
         ]
 
-        #print(tunes_data)
-
         return JsonResponse({'tunes': tunes_data})
     
+
 def test_tunes(request):
+    """
+    Renders the test tunes page.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object.
+
+    Returns:
+    --------
+    HttpResponse
+        Renders the 'test_tunes.html' template.
+    """
     return render(request, 'test_tunes.html')
 
+
 def get_tune_feature_values(request):
+    """
+    Processes an ABC notation input and returns its calculated feature values as JSON.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP POST request containing 'abc_notation' in the request data.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response with calculated feature values for the given ABC notation,
+        or an error message if 'abc_notation' is missing.
+    """
     if request.method == 'POST':
         # Get ABC notation from the request
         abc_notation = request.POST.get('abc_notation')
@@ -283,9 +493,28 @@ def get_tune_feature_values(request):
         # Return the feature values as JSON
         return JsonResponse(features['unknown'])
     
+
 def get_tune_comparisons(request):
+    """
+    Retrieves musical feature comparisons for stored tunes and a user-uploaded ABC notation, if provided.
+    Calculates feature values for each tune and organizes them into data for 3D scatter plots, based on 
+    unique feature triplets.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object containing an optional 'abc_notation' parameter for user-uploaded ABC notation.
+
+    Returns:
+    --------
+    JsonResponse
+        A JSON response with:
+            - 'features': A dictionary of calculated feature values for the user-uploaded ABC notation.
+            - 'plots': A dictionary with plot data for each feature triplet, containing 'x', 'y', 'z' values,
+              'labels' for tune names, and 'composer' names for coloring points in the plot.
+    """
     abc_notation = request.GET.get('abc_notation', None)
-    # List all features you want to calculate
+    # List all features to calculate
     features = ["notes", "rests", "chords", "avg_pitch", "duration_sd"]
     feature_triplets = list(combinations(features, 3))
 

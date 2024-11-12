@@ -1,4 +1,3 @@
-<!-- templates/music_analysis/test_tunes.html -->
 <!DOCTYPE html>
 {% load static %}  <!-- Load the static files -->
 
@@ -51,145 +50,49 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-        }
+    }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 60%;
-            max-width: 500px;
-        }
-        .close-button {
-            float: right;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 60%;
+        max-width: 500px;
+    }
+    .close-button {
+        float: right;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
 
-        /* Plot Container Grid */
-        #plots-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
+    /* Plot Container Grid */
+    #plots-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
 
-        /* Individual Plot Styling */
-        .plot {
-            width: 100%;
-            height: 500px;
-        }
+    /* Individual Plot Styling */
+    .plot {
+        width: 100%;
+        height: 500px;
+    }
 </style>
 
 <script>
-    // Get modal elements
-    // const abcModal = document.getElementById('abc-modal');
-    // const openPopupButton = document.getElementById('open-popup');
-    // const closeButton = document.querySelector('.close-button');
-    // const submitButton = document.getElementById('submit-abc');
-    // const abcInput = document.getElementById('abc-input');
-
-    // // Open the modal
-    // openPopupButton.onclick = function() {
-    //     abcModal.style.display = 'block';
-    // };
-
-    // // Close the modal
-    // closeButton.onclick = function() {
-    //     abcModal.style.display = 'none';
-    // };
-
-    // // Close the modal when clicking outside of it
-    // window.onclick = function(event) {
-    //     if (event.target == abcModal) {
-    //         abcModal.style.display = 'none';
-    //     }
-    // };
-
-    // Handle ABC notation submission
-    // submitButton.onclick = function() {
-    //     const abcNotation = abcInput.value.trim();
-
-    //     if (!abcNotation) {
-    //         alert("Please enter valid ABC notation.");
-    //         return;
-    //     }
-
-    //     // Send ABC notation to the backend to calculate features
-    //     fetch('/calculate-features/', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/x-www-form-urlencoded',
-    //             'X-CSRFToken': getCookie('csrftoken')  // Include CSRF token for Django
-    //         },
-    //         body: new URLSearchParams({ abc_notation: abcNotation })
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         if (data.error) {
-    //             alert(data.error);
-    //         } else {
-    //             // Save the calculated features temporarily on the frontend
-    //             console.log(data);
-    //             displayFeatures(data);
-    //         }
-    //     })
-    //     .catch(error => console.error('Error:', error));
-
-    //     // Close the modal after submission
-    //     abcModal.style.display = 'none';
-    // };
-
-    // function displayFeatures(features) {
-    //     const featuresTableBody = document.querySelector('#features-table tbody');
-
-    //     // Clear any existing rows in the table
-    //     featuresTableBody.innerHTML = '';
-
-    //     // Add each feature as a new row in the table
-    //     for (const [feature, value] of Object.entries(features)) {
-    //         const row = document.createElement('tr');
-
-    //         const featureCell = document.createElement('td');
-    //         featureCell.textContent = feature.replace('_', ' ');
-
-    //         const valueCell = document.createElement('td');
-    //         valueCell.textContent = typeof value === 'number' ? value.toFixed(2) : value;
-
-    //         row.appendChild(featureCell);
-    //         row.appendChild(valueCell);
-    //         featuresTableBody.appendChild(row);
-    //     }
-    // }
-
-    // // Helper function to get CSRF token from cookies
-    // function getCookie(name) {
-    //     let cookieValue = null;
-    //     if (document.cookie && document.cookie !== '') {
-    //         const cookies = document.cookie.split(';');
-    //         for (let i = 0; i < cookies.length; i++) {
-    //             const cookie = cookies[i].trim();
-    //             if (cookie.substring(0, name.length + 1) === (name + '=')) {
-    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     return cookieValue;
-    // }
-
     // Fetch data for all feature triplets and plot each one
     document.addEventListener('DOMContentLoaded', function() {
         // Get elements for modal, button, and input
