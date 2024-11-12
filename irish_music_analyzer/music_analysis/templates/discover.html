@@ -8,6 +8,56 @@
     <link rel="stylesheet" href="{% static 'music_analysis/css/discover.css' %}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
+<style>
+    /* Style for the popup to be consistent with other forms */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    }
+
+    .modal.show {
+        display: block; /* Show modal when the 'show' class is added */
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        max-width: 500px;
+        position: relative;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 20px;
+        color: #333;
+        cursor: pointer;
+    }
+
+    /* Consistent form actions button style */
+    .form-actions button {
+        padding: 10px 20px;
+        background-color: rgb(111, 145, 47);
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .form-actions button:hover {
+        background-color: darkcyan;
+    }
+</style>
 <body>
 
     <div class="container">
@@ -84,12 +134,53 @@
         <p id="error-message" style="color: red; display: none;">You must select exactly three features (one for each axis).</p>
 
         <!-- Button to trigger graph update -->
-        <button onclick="plotGraph()">Show 3D Scatter Plot</button>
+        <button onclick="plotGraph()">3D Scatter Plot</button>
+
+        <!-- Button to trigger heatmap popup -->
+        <button id="heatmap-btn">Heatmap</button>
+
+        <!-- Button to trigger clustering popup -->
+        <button id="cluster-btn">Cluster</button>
 
         <!-- Graph Container -->
         <div id="graph-container" style="width: 98%; height: 500px;"></div>
 
     </div>
+
+    <!-- Heatmap Popup Modal -->
+    <div id="heatmap-popup" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeHeatmapPopup()">&times;</span>
+            <h2>Heatmap Analysis</h2>
+            
+            <!-- Container for the heatmap -->
+            <div id="heatmap-container" style="width: 100%; height: 500px;"></div>
+
+            <div class="form-actions">
+                <button type="button" onclick="closeHeatmapPopup()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cluster Popup Modal -->
+    <div id="cluster-popup" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeClusterPopup()">&times;</span>
+            <h2>Clustering Analysis</h2>
+            
+            <!-- Container for the clustering graph -->
+            <div id="cluster-container" style="width: 100%; height: 400px;"></div>
+
+            <div class="form-actions">
+                <button type="button" onclick="closeClusterPopup()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Button with Logo -->
+    <a href="{% url 'music_dashboard' %}" class="home-button">
+        <img src="{% static 'music_analysis/images/home-icon.png' %}" alt="Home">
+    </a>
 
     <script>
         // Function to plot the 3D scatter graph based on selected features with AJAX
@@ -155,6 +246,168 @@
             })
             .catch(error => console.error('Error fetching data:', error));
         }
+
+        // Function to display the correlation heatmap in the Heatmap popup
+        function plotHeatmap() {
+            // Fetch correlation data from the backend
+            fetch('/calculate-feature-correlation/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Extract correlation data and feature names
+                const correlationData = data.correlation_data;
+                const featureNames = data.feature_names;
+
+                console.log(correlationData);
+
+                // Convert correlation data to a 2D array format for Plotly
+                const zValues = featureNames.map(row => featureNames.map(col => correlationData[row][col]));
+
+                // Plot the heatmap
+                let heatmapData = [{
+                    z: zValues,
+                    x: featureNames,   // Labels for x-axis
+                    y: featureNames,   // Labels for y-axis
+                    type: 'heatmap',
+                    colorscale: 'Viridis'
+                }];
+
+                let layout = {
+                    title: 'Feature Correlation Heatmap',
+                    //xaxis: { title: 'Features' },
+                    //yaxis: { title: 'Features' }
+                };
+
+                // Render the heatmap in the heatmap-container div
+                Plotly.newPlot('heatmap-container', heatmapData, layout);
+            })
+            .catch(error => console.error('Error fetching correlation data:', error));
+        }
+
+        function plotClusterGraph() {
+            // Get selected features for X, Y, and Z axes
+            let xFeature = document.getElementById('x-axis').value;
+            let yFeature = document.getElementById('y-axis').value;
+            let zFeature = document.getElementById('z-axis').value;
+
+            // Ensure that all three features are selected
+            if (xFeature === '' || yFeature === '' || zFeature === '') {
+                document.getElementById('error-message').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('error-message').style.display = 'none';
+            }
+
+            // Send selected features to the backend for clustering
+            fetch('/perform-clustering/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ xFeature: xFeature, yFeature: yFeature, zFeature: zFeature })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear previous graph
+                document.getElementById('cluster-container').innerHTML = '';
+
+                // Define colors for each cluster
+                const clusterColors = ['red', 'blue', 'green'];
+
+                // Create traces for each cluster
+                let traces = [];
+                for (let i = 0; i < 3; i++) {
+                    let clusterPoints = data.clusters.map((cluster, index) => cluster === i ? index : -1).filter(index => index !== -1);
+                    
+                    let trace = {
+                        x: clusterPoints.map(index => data.x[index]),
+                        y: clusterPoints.map(index => data.y[index]),
+                        z: clusterPoints.map(index => data.z[index]),
+                        mode: 'markers',
+                        type: 'scatter3d',
+                        marker: {
+                            size: 5,
+                            color: clusterColors[i]
+                        },
+                        name: `Cluster ${i + 1}`,
+                        text: clusterPoints.map(index => data.composers[index]),  // Composer names for hover
+                        hoverinfo: 'text'
+                    };
+                    traces.push(trace);
+                }
+
+                // Layout for the 3D scatter plot
+                let layout = {
+                    title: 'K-Means Clustering of Tunes',
+                    scene: {
+                        xaxis: { title: xFeature.charAt(0).toUpperCase() + xFeature.slice(1) },
+                        yaxis: { title: yFeature.charAt(0).toUpperCase() + yFeature.slice(1) },
+                        zaxis: { title: zFeature.charAt(0).toUpperCase() + zFeature.slice(1) }
+                    }
+                };
+
+                // Render the clustering graph in the cluster-container div
+                Plotly.newPlot('cluster-container', traces, layout);
+            })
+            .catch(error => console.error('Error fetching clustered data:', error));
+        }
+
+        // Function to open Cluster Popup and display the Clustering Graph
+        function openClusterPopup() {
+            // Get selected features for X, Y, and Z axes
+            let xFeature = document.getElementById('x-axis').value;
+            let yFeature = document.getElementById('y-axis').value;
+            let zFeature = document.getElementById('z-axis').value;
+
+            // Check if exactly three features are selected
+            if (xFeature === '' || yFeature === '' || zFeature === '') {
+                // Show error message if all three features are not selected
+                document.getElementById('error-message').style.display = 'block';
+            } else {
+                // Hide error message if selection is valid
+                document.getElementById('error-message').style.display = 'none';
+                
+                // Display the Cluster popup and plot the clustering graph
+                document.getElementById('cluster-popup').classList.add('show');
+                plotClusterGraph();  // Call the clustering graph plotting function
+            }
+        }
+
+        // Close the Cluster Popup
+        function closeClusterPopup() {
+            document.getElementById('cluster-popup').classList.remove('show');
+        }
+
+        // Open Heatmap Popup and Display the Heatmap
+        function openHeatmapPopup() {
+            document.getElementById('heatmap-popup').classList.add('show');
+            plotHeatmap();  // Call the heatmap plotting function when the popup opens
+        }
+
+        // Close the Heatmap Popup
+        function closeHeatmapPopup() {
+            document.getElementById('heatmap-popup').classList.remove('show');
+        }
+
+        // Function to show the clustering popup
+        // function openPopup() {
+        //     document.getElementById('cluster-popup').style.display = 'block';
+        // }
+
+        // // Function to close the clustering popup
+        // function closePopup() {
+        //     document.getElementById('cluster-popup').style.display = 'none';
+        // }
+
+        // Attach event listener to Cluster button to open the popup
+        document.getElementById('cluster-btn').addEventListener('click', openClusterPopup);
+        document.getElementById('heatmap-btn').addEventListener('click', openHeatmapPopup);
     </script>
 
 

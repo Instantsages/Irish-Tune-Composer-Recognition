@@ -36,15 +36,100 @@
             </li>
             <li>
                 <img src="{% static 'music_analysis/images/playlist_icon.png' %}" alt="Playlists" class="sidebar-icon">
-                <a href="#">Playlists</a>
+                <a href="{% url 'test-tunes' %}">Test Tunes</a>
             </li>
         </ul>
     </div>
 
     <div class="main-content">
         <h2>AI For Irish Music!</h2>
-        <div class="placeholder">[Place Tunes Player Here]</div>
+        <div class="placeholder">
+            <!-- Audio Player -->
+            <audio id="audioPlayer" controls>
+                <source src="{% static 'music_analysis/audio/home_page_tune.mp3' %}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+    
+            <!-- Canvas to display waveform -->
+            <canvas id="waveformCanvas"></canvas>
+        </div>
     </div>
-
+    
+    <script>
+        // Initialize Web Audio API and setup waveform analyzer
+        const audioPlayer = document.getElementById('audioPlayer');
+        const canvas = document.getElementById('waveformCanvas');
+        const canvasContext = canvas.getContext('2d');
+    
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let bufferLength;
+    
+        // Set up audio context and analyser when the audio starts playing
+        audioPlayer.addEventListener('play', () => {
+            if (!audioContext) {
+                // Initialize the Audio Context and Analyser once
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaElementSource(audioPlayer);
+                analyser = audioContext.createAnalyser();
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+    
+                // Configure the analyser for waveform data
+                analyser.fftSize = 2048;
+                bufferLength = analyser.fftSize;
+                dataArray = new Uint8Array(bufferLength);
+    
+                // Start drawing the waveform
+                drawWaveform();
+            }
+        });
+    
+        // Function to draw the waveform on the canvas
+        function drawWaveform() {
+            requestAnimationFrame(drawWaveform);
+    
+            // Get waveform (time domain) data
+            analyser.getByteTimeDomainData(dataArray);
+    
+            // Clear the canvas
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    
+            // Set up the waveform drawing style
+            canvasContext.lineWidth = 2;
+            canvasContext.strokeStyle = '#4c4c4c'; // Waveform color
+            canvasContext.fillStyle = '#4c4c4c'; // Fill color for the waveform
+    
+            // Begin the waveform path
+            canvasContext.beginPath();
+            let sliceWidth = canvas.width / bufferLength;
+            let x = 0;
+    
+            // Loop through the dataArray to draw the waveform
+            for (let i = 0; i < bufferLength; i++) {
+                let v = dataArray[i] / 128.0; // Scale the waveform
+                let y = (v * canvas.height) / 2;
+    
+                if (i === 0) {
+                    canvasContext.moveTo(x, y);
+                } else {
+                    canvasContext.lineTo(x, y);
+                }
+                x += sliceWidth;
+            }
+    
+            // Complete the waveform path
+            canvasContext.lineTo(canvas.width, canvas.height / 2);
+            canvasContext.stroke();
+    
+            // Fill the waveform area
+            canvasContext.lineTo(canvas.width, canvas.height);
+            canvasContext.lineTo(0, canvas.height);
+            canvasContext.closePath();
+            canvasContext.fill();
+        }
+    </script>
+    
 </body>
 </html>

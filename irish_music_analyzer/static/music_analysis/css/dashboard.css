@@ -118,11 +118,25 @@ body {
     font-size: 50px;
 }
 
+/* dashboard.css */
 .placeholder {
-    background-color: #555;
-    height: 200px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: white;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+audio {
+    width: 100%;
+    max-width: 300px;
+}
+
+canvas {
+    width: 100%;
+    max-width: 500px;
+    height: 100px;
+    background-color: #000;
 }

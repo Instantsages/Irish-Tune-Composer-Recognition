@@ -88,3 +88,39 @@ button:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     padding: 10px;
 }
+
+
+/* Link colors for Cancel buttons */
+a {
+    color: #ffffff;  /* Yellow links */
+}
+
+a:hover {
+    color: #fff;  /* Hover effect for links */
+}
+
+/* Circular Home Button */
+.home-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;  /* Ensure the button stays on top of other content */
+    width: 60px;  /* Diameter of the circle */
+    height: 60px;  /* Same as width to make it a circle */
+    background-color: #008CBA;  /* Button background color */
+    border-radius: 50%;  /* Makes the button a perfect circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Add shadow for depth */
+}
+
+.home-button img {
+    width: 70%;  /* Scale the logo inside the button */
+    height: 70%;  /* Keep aspect ratio */
+    object-fit: contain;  /* Ensures the logo fits inside the circle */
+}
+
+.home-button:hover {
+    background-color: #007bb5;  /* Darker background on hover */
+}
