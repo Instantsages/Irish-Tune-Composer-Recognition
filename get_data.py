@@ -30,7 +30,7 @@ def convert_to_txt(dest, source = "Tunes_Found.csv"):
             # Replace newline indicator with real newline
             abc_notation = abc_notation.replace('\\n', '\n')
             # Remove places where multiple newlines repeat
-            abc_notation = re.sub(r'\n+', '\n', abc_notation)
+            abc_notation = re.sub(r'\n+', '\n', abc_notation).strip()
 
             # For all but the last tune, make sure that the tune ends with newline
             if not abc_notation.endswith('\n') and index < len(tunes_data) - 1:
