@@ -8,7 +8,13 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 from torch.utils.data import DataLoader, TensorDataset
 import matplotlib.pyplot as plt
 
-from cs_senior_seminar import extract_features, abc_to_midi, read_abcs, convert_abc_to_midi
+from cs_senior_seminar import (
+    extract_features,
+    abc_to_midi,
+    read_abcs,
+    convert_abc_to_midi,
+)
+
 
 class ComposerNN(nn.Module):
     # a neural network class for classification task
@@ -19,53 +25,58 @@ class ComposerNN(nn.Module):
         self.fc3 = nn.Linear(32, output_size)
         self.relu = nn.ReLU()
         self.softmax = nn.Softmax(dim=1)
-    
+
     def forward(self, x):
-        '''Function for forward pass'''
+        """Function for forward pass"""
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
         x = self.softmax(x)
         return x
 
+
 def get_data(input_file):
-    '''Get data from midi files and form composers and tunes dataset from it'''
+    """Get data from midi files and form composers and tunes dataset from it"""
     abc_tunes = read_abcs(input_file)
     midi_tunes = convert_abc_to_midi(abc_tunes)
     features = extract_features(midi_tunes)
     dataset, composers = make_dataset(features)
     return dataset, composers
 
+
 def make_dataset(features):
-    '''Make the dataset in appropriate format to be converted to dataloader'''
+    """Make the dataset in appropriate format to be converted to dataloader"""
     composers = []
     dataset = []
     for composer, tunes in features.items():
         for tune in tunes:
-            data = [tune['avg_pitch'],
-                    tune['pitch_range'],
-                    tune['pitch_sd'],
-                    tune['avg_duration'],
-                    tune['duration_range'],
-                    tune['duration_sd'],
-                    tune['avg_interval'],
-                    tune['interval_range'],
-                    tune['interval_sd']]
+            data = [
+                tune["avg_pitch"],
+                tune["pitch_range"],
+                tune["pitch_sd"],
+                tune["avg_duration"],
+                tune["duration_range"],
+                tune["duration_sd"],
+                tune["avg_interval"],
+                tune["interval_range"],
+                tune["interval_sd"],
+            ]
             dataset.append(data)
             composers.append(composer)
     dataset = np.array(dataset)
     scalar = StandardScaler()
     standardized_dataset = scalar.fit_transform(dataset)
-                                   
+
     return standardized_dataset, composers
 
+
 def prepare_data(dataset, composers):
-    '''Prepaper dataset for the neural network'''
+    """Prepaper dataset for the neural network"""
     Label_Encoder = LabelEncoder()
     labels = Label_Encoder.fit_transform(composers)
 
     # split train and val dataset into 80-20
-    X_train, X_test, y_train, y_test = train_test_split(dataset, labels, test_size=0.2) 
+    X_train, X_test, y_train, y_test = train_test_split(dataset, labels, test_size=0.2)
 
     # convert to tensor
     X_train = torch.tensor(X_train)
@@ -81,8 +92,9 @@ def prepare_data(dataset, composers):
 
     return train_loader, test_loader
 
+
 def run_model(model, train_loader, test_loader, num_epochs=10):
-    '''Train the model and plot the train and val losses over all epochs'''
+    """Train the model and plot the train and val losses over all epochs"""
 
     # cross entropy loss for classification task
     criterion = nn.CrossEntropyLoss()
@@ -95,7 +107,7 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
         correct = 0
         total = 0
         for inputs, labels in train_loader:
-            #zero the gradients
+            # zero the gradients
             optimizer.zero_grad()
 
             # find outputs
@@ -110,8 +122,10 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-    
-        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss:.4f}, Accuracy: {100*correct/total:.2f}%")
+
+        print(
+            f"Epoch {epoch+1}/{num_epochs}, Loss: {running_loss:.4f}, Accuracy: {100*correct/total:.2f}%"
+        )
         avg_loss = running_loss / len(train_loader)
         train_losses.append(avg_loss)
 
@@ -133,18 +147,19 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
         val_losses.append(avg_val_loss)
         print(f"Test Loss: {avg_val_loss:.4f}, Test Accuracy: {100*correct/total:.2f}%")
 
-    # plot the val and train losses over epochs    
+    # plot the val and train losses over epochs
     plt.figure(figsize=(10, 6))
-    plt.plot(range(num_epochs), train_losses, label='Train Loss')
-    plt.plot(range(num_epochs), val_losses, label='Validation Loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.title('Training and Validation Loss')
+    plt.plot(range(num_epochs), train_losses, label="Train Loss")
+    plt.plot(range(num_epochs), val_losses, label="Validation Loss")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss")
     plt.legend()
     plt.show()
-    
+
+
 def main():
-    input_file = 'sample_abc.txt'
+    input_file = "sample_abc.txt"
     dataset, composers = get_data(input_file)
     print(dataset)
     print(composers)
@@ -152,5 +167,6 @@ def main():
     model = ComposerNN(train_loader.dataset.tensors[0].shape[1], len(set(composers)))
     run_model(model, train_loader, test_loader)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

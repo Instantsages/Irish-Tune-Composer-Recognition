@@ -6,11 +6,11 @@
     Description: Visualize data with image and text
 """
 
-
 import pandas as pd
 import re
 
-def convert_to_txt(dest, source = "Tunes_Found.csv"):
+
+def convert_to_txt(dest, source="Tunes_Found.csv"):
     """
     Converts formatted csv data to formatted txt
     Keyword arguments:
@@ -28,13 +28,13 @@ def convert_to_txt(dest, source = "Tunes_Found.csv"):
             abc_notation = row["ABC Notation"]
 
             # Replace newline indicator with real newline
-            abc_notation = abc_notation.replace('\\n', '\n')
+            abc_notation = abc_notation.replace("\\n", "\n")
             # Remove places where multiple newlines repeat
-            abc_notation = re.sub(r'\n+', '\n', abc_notation).strip()
+            abc_notation = re.sub(r"\n+", "\n", abc_notation).strip()
 
             # For all but the last tune, make sure that the tune ends with newline
-            if not abc_notation.endswith('\n') and index < len(tunes_data) - 1:
-                abc_notation = abc_notation + '\n'
+            if not abc_notation.endswith("\n") and index < len(tunes_data) - 1:
+                abc_notation = abc_notation + "\n"
 
             # Writes to txt file
             text_file.write(musician)
@@ -43,7 +43,7 @@ def convert_to_txt(dest, source = "Tunes_Found.csv"):
             # Remove newline after the last tune
             if index < len(tunes_data) - 1:
                 text_file.write("\n")
-    
+
 
 # Controls operation of the program
 def main():

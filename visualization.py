@@ -5,6 +5,7 @@
     Semester:    Fall 2024
     Description: Visualize data with image and text
 """
+
 from cs_senior_seminar import *
 
 import seaborn as sns
@@ -25,13 +26,13 @@ def scatterplot_2items(features, labels, x_item, y_item):
     tunes_list = []
     for composer in features:
         tunes_list.extend(features[composer])
-    
-    plot_data = pd.DataFrame(tunes_list)
-    
-    assert(x_item in plot_data), f"{x_item} is not in the data given"
-    assert(y_item in plot_data), f"{y_item} is not in the data given"
 
-    sns.scatterplot(data = plot_data, x = x_item, y = y_item, hue = labels)
+    plot_data = pd.DataFrame(tunes_list)
+
+    assert x_item in plot_data, f"{x_item} is not in the data given"
+    assert y_item in plot_data, f"{y_item} is not in the data given"
+
+    sns.scatterplot(data=plot_data, x=x_item, y=y_item, hue=labels)
 
     for composer in features:
         current_tunes = features[composer]
@@ -43,6 +44,7 @@ def scatterplot_2items(features, labels, x_item, y_item):
 
     plt.show()
 
+
 def analyze_features(features, labels):
     """
     Group data points by cluster, calculating the means and standard deviations of each feature
@@ -52,9 +54,9 @@ def analyze_features(features, labels):
         labels (list): Labels that specify clusters of data points
 
     Returns: a dictionary that is indexed by cluster label and then feature name
-             For each feature within each cluster, the dictionary contains the mean and standard deviation            
+             For each feature within each cluster, the dictionary contains the mean and standard deviation
     """
-    
+
     analysis = {}
 
     for composer in features:
@@ -68,19 +70,24 @@ def analyze_features(features, labels):
 
             if not current_cluster in analysis:
                 analysis[current_cluster] = {}
-            
+
             for feature_name in current_feature:
                 if not feature_name in analysis[current_cluster]:
                     analysis[current_cluster][feature_name] = []
 
-                analysis[current_cluster][feature_name].append(current_feature[feature_name])
+                analysis[current_cluster][feature_name].append(
+                    current_feature[feature_name]
+                )
 
     # Keep track of the mean and sd within each group
     for current_cluster in analysis:
         current_feature = analysis[current_cluster]
 
         for feature_name in current_feature:
-            analysis[current_cluster][feature_name] = (statistics.mean(current_feature[feature_name]), statistics.stdev(current_feature[feature_name]))
+            analysis[current_cluster][feature_name] = (
+                statistics.mean(current_feature[feature_name]),
+                statistics.stdev(current_feature[feature_name]),
+            )
 
     return analysis
 
@@ -90,24 +97,20 @@ def find_analysis(analysis, cluster_label, feature_name):
     Prints out the average and standard deviation of a feature within a cluster
 
     Keyword arguments:
-        analysis: dictionary that is output from analyze_features. Contains the mean and standard deviation 
+        analysis: dictionary that is output from analyze_features. Contains the mean and standard deviation
                   for each feature within each cluster
         cluster_label: the cluster to look at
-        feature_name (string): the name of the feature to look at      
+        feature_name (string): the name of the feature to look at
     """
-    mean,sd = analysis[cluster_label][feature_name]
+    mean, sd = analysis[cluster_label][feature_name]
 
     print(f"Looking at Cluster {cluster_label} and Feature {feature_name}")
     print(f"Mean: {mean}")
     print(f"Standard Deviation: {sd}\n")
 
 
-   
-
-
-
 def demo():
-    input_file = 'sample_abc.txt'
+    input_file = "abc.txt"
 
     abc_tunes = read_abcs(input_file)
     midi_tunes = convert_abc_to_midi(abc_tunes)
@@ -116,20 +119,21 @@ def demo():
     dataset, composers = create_dataset(features)
     # print(dataset)
 
-    labels = k_means_clustering(dataset, 3)
+    labels = k_means_clustering(dataset, 8)
 
-    scatterplot_2items(features, labels, 'notes', 'pitch_sd')
-    scatterplot_2items(features, labels, 'different_rhythms', 'contour_up')
+    scatterplot_2items(features, labels, "avg_duration", "contour_down")
+    # scatterplot_2items(features, labels, 'different_rhythms', 'contour_up')
 
     feature_analysis = analyze_features(features, labels)
 
     find_analysis(feature_analysis, 0, "notes")
-    
+
     input("Push enter to continue \n")
 
     for cluster_label in feature_analysis:
         for feature_name in feature_analysis[cluster_label]:
             find_analysis(feature_analysis, cluster_label, feature_name)
+
 
 def main():
     demo()
@@ -139,7 +143,5 @@ def main():
     #         find_analysis(feature_analysis, cluster_label, feature_name)
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
