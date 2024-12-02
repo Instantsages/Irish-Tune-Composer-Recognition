@@ -18,7 +18,7 @@ body {
     z-index: 100;
     height: 50px;
     box-sizing: border-box;
-    border-left: 1px solid #2d3748;  /* Thin boundary only on the right side */
+    border-left: 1px olid #2d3748;  /* Thin boundary only on the right side */
 
 }
 
@@ -139,4 +139,34 @@ canvas {
     max-width: 500px;
     height: 100px;
     background-color: #000;
+}
+
+/* Mission Statement Section */
+.mission-statement {
+    background-color: #f4f4f4;
+    /*padding: 40px;*/
+    margin-top: 60px;
+    margin-left: 270px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-align: center;
+    font-size: 18px;
+    width:  10px; /* Ensure it doesn’t overlap with sidebar */
+}
+
+.mission-statement h3 {
+    margin-left: 40px;       /* Adjust the margin to align with the sidebar */
+    font-size: 100px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.mission-statement p {
+    margin-left: 40px;       /* Adjust the margin to align with the sidebar */
+    line-height: 1.6;
+    font-size: 32px;
+    color: #555;
+    margin: 0;
 }

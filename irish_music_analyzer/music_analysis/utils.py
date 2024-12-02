@@ -1,6 +1,33 @@
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.cluster import KMeans
 from music21 import converter
 import numpy as np
+import torch
+
+
+# Load model, scaler, and label encoder once to reuse for multiple requests
+MODEL_PATH = "best.pth"
+SCALAR_MEAN_PATH = "scalar_mean.npy"
+SCALAR_SCALE_PATH = "scalar_scale.npy"
+LABEL_CLASSES_PATH = "label_classes.npy"
+
+
+class ComposerNN(torch.nn.Module):
+    def __init__(self, input_size, output_size):
+        super(ComposerNN, self).__init__()
+        self.fc1 = torch.nn.Linear(input_size, 64)
+        self.fc2 = torch.nn.Linear(64, 32)
+        self.fc3 = torch.nn.Linear(32, output_size)
+        self.relu = torch.nn.ReLU()
+        self.softmax = torch.nn.Softmax(dim=1)
+    
+    def forward(self, x):
+        x = self.relu(self.fc1(x))
+        x = self.relu(self.fc2(x))
+        x = self.fc3(x)
+        x = self.softmax(x)
+        return x
+
 
 def extract_tempo(abc_notation):
     return 10
@@ -100,3 +127,80 @@ def extract_features(midi_format):
     }
 
     return features
+
+
+def convert_abc_to_midi(abc_tunes):
+    midi_tunes = {}
+    for composer, abc_tunes in abc_tunes.items():
+        for abc_tune in abc_tunes:
+            midi = converter.parse(abc_tune)
+            if composer not in midi_tunes:
+                midi_tunes[composer] = [midi]
+            else:
+                midi_tunes[composer].append(midi)
+    return midi_tunes
+
+
+def preprocess_abc_for_nn(abc_notation):
+    """
+    Preprocess ABC notation into standardized feature vector.
+
+    Args:
+        abc_notation (str): ABC notation string.
+
+    Returns:
+        np.ndarray: Standardized feature vector.
+    """
+    # Convert ABC notation to MIDI
+    midi_tune = convert_abc_to_midi(abc_notation)
+    
+    # Extract features
+    features = extract_features([midi_tune])['unknown']
+
+    # Create a feature vector
+    feature_vector = np.array([
+        features['avg_pitch'],
+        features['pitch_range'],
+        features['pitch_sd'],
+        features['avg_duration'],
+        features['duration_range'],
+        features['duration_sd'],
+        features['avg_interval'],
+        features['interval_range'],
+        features['interval_sd']
+    ]).reshape(1, -1)  # Reshape to 2D array for scaling
+
+    # Standardize the feature vector
+    standardized_vector = scalar.transform(feature_vector)
+    return standardized_vector
+
+
+def get_inference(abc_notation):
+    """
+    Perform inference to classify the composer from ABC notation.
+
+    Args:
+        abc_notation (str): ABC notation string.
+
+    Returns:
+        str: Predicted composer name.
+    """
+    # Load the model
+    input_size = 9  # Number of features used during training
+    model = ComposerNN(input_size, output_size=3)  # Adjust output_size if needed
+    model.load_state_dict(torch.load(MODEL_PATH))
+    model.eval()
+
+    # Load the StandardScaler and LabelEncoder
+    scalar = StandardScaler()
+    scalar.mean_ = np.load(SCALAR_MEAN_PATH)
+    scalar.scale_ = np.load(SCALAR_SCALE_PATH)
+    label_encoder = LabelEncoder()
+    label_encoder.classes_ = np.load(LABEL_CLASSES_PATH)
+
+    feature_vector = preprocess_abc_for_nn(abc_notation)
+    with torch.no_grad():
+        input_tensor = torch.tensor(feature_vector, dtype=torch.float32)
+        output = model(input_tensor)
+        predicted_label = torch.argmax(output, dim=1).item()
+        return label_encoder.inverse_transform([predicted_label])[0]

@@ -16,4 +16,5 @@ urlpatterns = [
     path('search-tunes/', views.search_tunes, name='search_tunes'),
     path('calculate-features/', views.get_tune_feature_values, name='calculate_features'),
     path('get-tune-comparisons/', views.get_tune_comparisons, name='get_tune_comparisons'),
+    path('make-inference/', views.make_inference, name='make_inference'),
 ]

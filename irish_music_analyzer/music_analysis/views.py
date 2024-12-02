@@ -1,4 +1,4 @@
-from .utils import processing_pipeline
+from .utils import processing_pipeline, get_inference
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +11,7 @@ from .models import Tune
 import numpy as np
 import pandas as pd
 import json
+
 
 def index(request):
     """
@@ -554,3 +555,29 @@ def get_tune_comparisons(request):
         'features': uploaded_tune_features if uploaded_tune_features else {},
         'plots': data_for_triplets
     })
+
+
+def make_inference(request):
+    """
+    Handle a POST request to classify an ABC notation as a composer.
+
+    Args:
+        request: Django HTTP request containing 'abc_notation' in POST data.
+
+    Returns:
+        JsonResponse: JSON containing the predicted composer or an error message.
+    """
+    if request.method == "POST":
+        abc_notation = request.POST.get("abc_notation", "").strip()
+
+        if not abc_notation:
+            return JsonResponse({"error": "No ABC notation provided"}, status=400)
+
+        try:
+            composer_name = get_inference(abc_notation)
+            return JsonResponse({"composer": composer_name})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

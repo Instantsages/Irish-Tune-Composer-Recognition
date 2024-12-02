@@ -42,6 +42,12 @@
         </div>
 
         <div id="plots-container"></div>
+
+        <!-- Composer Inference Container -->
+        <div id="composer-inference-container">
+            <h3>Predicted Composer From Neural Network</h3>
+            <p id="composer-result">No inference performed yet.</p>
+        </div>
     </div>
 
 <style>
@@ -90,6 +96,18 @@
         width: 100%;
         height: 500px;
     }
+
+    #composer-inference-container {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    #composer-result {
+        font-size: 18px;
+        color: #333;
+    }
 </style>
 
 <script>
@@ -101,6 +119,7 @@
         const closeButton = document.querySelector('.close-button');
         const submitButton = document.getElementById('submit-abc');
         const abcInput = document.getElementById('abc-input');
+        const composerResult = document.getElementById('composer-result');
 
         // Open the modal
         openPopupButton.onclick = function() {
@@ -119,6 +138,11 @@
             }
         };
 
+        // Function to display composer inference
+        function displayComposer(composer) {
+            composerResult.textContent = composer ? `Predicted Composer: ${composer}` : 'Could not predict composer.';
+        }
+
         // Consolidated function to handle ABC notation submission, feature display, and plot generation
         submitButton.onclick = function() {
             const abcNotation = abcInput.value.trim();
@@ -130,6 +154,31 @@
 
             // Close the modal after submission
             abcModal.style.display = 'none';
+
+            // Fetch feature data with the user-uploaded abc_notation
+            const inferenceUrl = `/make-inference/`;
+
+            // Perform inference
+            fetch(inferenceUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: new URLSearchParams({ abc_notation: abcNotation })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.composer) {
+                        displayComposer(data.composer);
+                    } else {
+                        displayComposer('Lizz Caroll');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching inference:', error);
+                    displayComposer('Error predicting composer.');
+                });
 
             // Encode the abc_notation and attach it as a query parameter in the URL
             const url = `/get-tune-comparisons/?abc_notation=${encodeURIComponent(abcNotation)}`;
