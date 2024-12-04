@@ -2,6 +2,7 @@ from music21 import converter, chord, interval, note, stream
 import numpy as np
 import json
 import numpy as np
+import os
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -216,29 +217,54 @@ def visualize_clusters(dataset, labels, composers):
     plt.legend()
     plt.show()
 
+def convert_all2midi(input_file):
+    abc_tunes_with_composer = read_abcs(input_file)
+
+    for composer in abc_tunes_with_composer:
+        try:
+            os.mkdir(composer)
+        except FileExistsError:
+            print(f"Directory '{composer}' already exists.")
+        except PermissionError:
+            print(f"Permission denied: Unable to create '{composer}'.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        current_list = abc_tunes_with_composer[composer]
+
+        for i in range(len(current_list)):
+            abc_to_midi = converter.parse(current_list[i])
+            try:
+                abc_to_midi.write("midi", fp=f"{composer}/{composer}_{str(i)}.mid")
+                print(f"MIDI file saved")
+            except:
+                print(f"A problem occured for {composer}/{composer}_{str(i)}.mid")
+                print(current_list[i])
+
+    
 
 def main():
     input_file = "abc.txt"
-    output_file = "result.txt"
+    convert_all2midi(input_file)
 
-    abc_tunes = read_abcs(input_file)
+    # abc_tunes = read_abcs(input_file)
 
-    # print(abc_tunes)
-    midi_tunes = convert_abc_to_midi(abc_tunes)
-    # print(len(midi_tunes))
+    # # print(abc_tunes)
+    # midi_tunes = convert_abc_to_midi(abc_tunes)
+    # # print(len(midi_tunes))
 
-    # midi = abc_to_midi(input_file, output_file)
-    # #print(midi)
+    # # midi = abc_to_midi(input_file, output_file)
+    # # #print(midi)
 
-    features = extract_features(midi_tunes)
-    # print(json.dumps(features, indent=4))
-    dataset, composers = create_dataset(features)
-    print(dataset)
+    # features = extract_features(midi_tunes)
+    # # print(json.dumps(features, indent=4))
+    # dataset, composers = create_dataset(features)
+    # print(dataset)
 
-    num_composers = 8
-    labels = k_means_clustering(dataset, num_composers)
+    # num_composers = 8
+    # labels = k_means_clustering(dataset, num_composers)
 
-    visualize_clusters(dataset, labels, composers)
+    # visualize_clusters(dataset, labels, composers)
 
 
 if __name__ == "__main__":
