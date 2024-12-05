@@ -15,6 +15,8 @@ from cs_senior_seminar import (
     convert_abc_to_midi,
 )
 
+from embedding_test import get_embeddings
+
 
 class ComposerNN(nn.Module):
     # a neural network class for classification task
@@ -60,6 +62,12 @@ def make_dataset(features):
                 tune["avg_interval"],
                 tune["interval_range"],
                 tune["interval_sd"],
+                # Ivan added
+                tune["contour_down"],
+                tune["note_density"],
+                tune["syncopation_ratio"],
+                tune["different_rhythms"],
+                tune["different_rhythms_ratio"]
             ]
             dataset.append(data)
             composers.append(composer)
@@ -98,7 +106,7 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
 
     # cross entropy loss for classification task
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    optimizer = optim.Adam(model.parameters(), lr=0.005)
     model.train()
     train_losses = []
     val_losses = []
@@ -158,14 +166,18 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
     plt.show()
 
 
+
 def main():
-    input_file = "sample_abc.txt"
-    dataset, composers = get_data(input_file)
+    #input_file = "abc.txt"
+    # dataset, composers = get_data(input_file)
+
+    input_file = "embeddings.bin"
+    dataset, composers = get_embeddings(input_file)
     print(dataset)
     print(composers)
     train_loader, test_loader = prepare_data(dataset, composers)
     model = ComposerNN(train_loader.dataset.tensors[0].shape[1], len(set(composers)))
-    run_model(model, train_loader, test_loader)
+    run_model(model, train_loader, test_loader, num_epochs= 200)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 from music21 import converter, chord, interval, note, stream
 import numpy as np
 import json
-import numpy as np
 import os
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
