@@ -7,8 +7,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from torch.utils.data import DataLoader, TensorDataset
 import matplotlib.pyplot as plt
+import torch.nn.functional as F
 
 from cs_senior_seminar import extract_features, abc_to_midi, read_abcs, convert_abc_to_midi
+
+class MusicClassifierMLP(nn.Module):
+    # a neural network class for classification task
+    def __init__(self, input_dim, num_classes=9):
+        super(MusicClassifierMLP, self).__init__()
+        self.fc1 = nn.Linear(input_dim, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, num_classes)
+
+        self.dropout1 = nn.Dropout(0.3)
+        self.dropout2 = nn.Dropout(0.3)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = self.dropout1(x)
+        x = F.relu(self.fc2(x))
+        x = self.dropout2(x)
+        x = self.fc3(x)
+        return x
 
 class ComposerNN(nn.Module):
     # a neural network class for classification task
@@ -26,6 +46,18 @@ class ComposerNN(nn.Module):
         x = self.relu(self.fc2(x))
         x = self.fc3(x)
         x = self.softmax(x)
+        return x
+    
+class MLPClassifier(nn.Module):
+    # a neural network class for classification task
+    def __init__(self, input_dim=128, num_classes=9, hidden_dim=256):
+        super(MLPClassifier, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, num_classes)
+    
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
         return x
 
 def get_data(input_file):
@@ -81,12 +113,12 @@ def prepare_data(dataset, composers):
 
     return train_loader, test_loader
 
-def run_model(model, train_loader, test_loader, num_epochs=10):
+def run_model(model, train_loader, test_loader, num_epochs=200):
     '''Train the model and plot the train and val losses over all epochs'''
 
     # cross entropy loss for classification task
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.01)
+    optimizer = optim.Adam(model.parameters(), lr=0.005)
     model.train()
     train_losses = []
     val_losses = []
@@ -144,12 +176,16 @@ def run_model(model, train_loader, test_loader, num_epochs=10):
     plt.show()
     
 def main():
-    input_file = 'sample_abc.txt'
+    '''Main function to run the model'''
+    input_file = 'abc.txt'
     dataset, composers = get_data(input_file)
     print(dataset)
     print(composers)
     train_loader, test_loader = prepare_data(dataset, composers)
     model = ComposerNN(train_loader.dataset.tensors[0].shape[1], len(set(composers)))
+    
+    #model = MLPClassifier(input_dim=train_loader.dataset.tensors[0].shape[1], num_classes=len(set(composers)))
+    #model = MusicClassifierMLP(input_dim=train_loader.dataset.tensors[0].shape[1], num_classes=len(set(composers)))
     run_model(model, train_loader, test_loader)
 
 if __name__ == '__main__':

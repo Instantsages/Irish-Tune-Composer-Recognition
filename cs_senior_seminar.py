@@ -3,10 +3,15 @@ import numpy as np
 import json
 import numpy as np
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score
+from sklearn.metrics import homogeneity_score, completeness_score, v_measure_score
+
 
 def abc_to_midi(input_file: str, output_file: str):
+    '''Converts an ABC file to a MIDI file'''
     with open(input_file, 'r') as file:
         abc_content = file.read()
     
@@ -18,7 +23,7 @@ def abc_to_midi(input_file: str, output_file: str):
     return abc_to_midi
 
 def extract_features(midi_tunes):
-    '''takes in a dictionary of composer to list of midi tunes'''
+    '''takes in a dictionary of composer to list of midi tunes and returns a dictionary of composer to list of features'''
     features = {}
     for composer, midi_tunes in midi_tunes.items():
         for midi_tune in midi_tunes:
@@ -30,6 +35,9 @@ def extract_features(midi_tunes):
     return features
 
 def extract_feature(midi_format):
+    '''takes in a midi format and returns a dictionary of features and extracts features'''
+    # notes, rests, chords, pitches_len, total_duration
+
     pitches = []
     durations = []
     rests = 0
@@ -97,17 +105,17 @@ def extract_feature(midi_format):
     different_rhythms_ratio = different_rhythms / len(rhytimic_features) if rhytimic_features else 0
 
     features = {
-        'notes': notes,
-        'rests': rests,
-        'chords': chords,
+        # 'notes': notes,
+        # 'rests': rests,
+        # 'chords': chords,
         'avg_pitch': avg_pitch,
         'pitch_range': pitch_range,
         'pitch_sd': pitch_sd,
-        'pitches_len': pitches_len,
+        # 'pitches_len': pitches_len,
         'avg_duration': avg_duration,
         'duration_range': duration_range,
         'duration_sd': duration_sd,
-        'total_duration': total_duration,
+        # 'total_duration': total_duration,
         'avg_interval': avg_interval,
         'interval_range': interval_range,
         'interval_sd': interval_sd,
@@ -122,6 +130,7 @@ def extract_feature(midi_format):
     return features
 
 def k_means_clustering(dataset, n_clusters):
+    '''performs k-means clustering on the dataset'''
     kmeans = KMeans(n_clusters=n_clusters)
     kmeans.fit(dataset)
     labels = kmeans.labels_
@@ -129,33 +138,38 @@ def k_means_clustering(dataset, n_clusters):
     return labels
 
 def create_dataset(features):
-    '''takes in a dictionary of composer to list of features, which is each a dictionary of features to values'''
+    '''takes in a dictionary of composer to list of tunes, which is each a dictionary of features to values'''
     #print(len(features))
     dataset = []
     composers = []
     for composer, features in features.items():
         for feature in features:
             dataset.append([
-                feature['notes'],
-                feature['rests'],
-                feature['chords'],
+                # feature['notes'],
+                # feature['rests'],
+                # feature['chords'],
                 feature['avg_pitch'],
                 feature['pitch_range'],
                 feature['pitch_sd'],
-                feature['pitches_len'],
+                # feature['pitches_len'],
                 feature['avg_duration'],
                 feature['duration_range'],
                 feature['duration_sd'],
-                feature['total_duration'],
+                # feature['total_duration'],
                 feature['avg_interval'],
                 feature['interval_range'],
                 feature['interval_sd']
             ])
             composers.append(composer)
     dataset = np.array(dataset)
-    return dataset, composers
+
+    scalar = StandardScaler()
+    standardized_dataset = scalar.fit_transform(dataset)
+
+    return standardized_dataset, composers
 
 def read_abcs(file):
+    '''Reads ABC file and returns a dictionary of composer to list of ABC tunes'''
     abc_tunes_with_composer = {}
     with open(file, 'r') as f:
         abc_tunes = f.read().split('\n\n')
@@ -173,6 +187,7 @@ def read_abcs(file):
     return abc_tunes_with_composer
 
 def convert_abc_to_midi(abc_tunes):
+    '''Converts ABC tunes to MIDI format'''
     midi_tunes = {}
     for composer, abc_tunes in abc_tunes.items():
         for abc_tune in abc_tunes:
@@ -184,6 +199,7 @@ def convert_abc_to_midi(abc_tunes):
     return midi_tunes
 
 def visualize_clusters(dataset, labels, composers):
+    '''Visualizes the clusters in a 2D plot'''
     # Reduce dimensions with PCA for visualization
     pca = PCA(n_components=2)
     reduced_data = pca.fit_transform(dataset)
@@ -207,6 +223,23 @@ def visualize_clusters(dataset, labels, composers):
     plt.legend()
     plt.show()
 
+def evaluate_clustering(true_labels, predicted_labels, dataset):
+    '''Evaluates the clustering using different metrics'''
+    silhouette = silhouette_score(dataset, predicted_labels)
+    davies_bouldin = davies_bouldin_score(dataset, predicted_labels)
+    ari = adjusted_rand_score(true_labels, predicted_labels)
+    homogeneity = homogeneity_score(true_labels, predicted_labels)
+    completeness = completeness_score(true_labels, predicted_labels)
+    v_measure = v_measure_score(true_labels, predicted_labels)
+
+    print(f'Silhouette Score: {silhouette:.3f}')
+    print(f'Davies-Bouldin Index: {davies_bouldin:.3f}')
+    print(f'Adjusted Rand Index: {ari:.3f}')
+    print(f'Homogeneity Score: {homogeneity:.3f}')
+    print(f'Completeness Score: {completeness:.3f}')
+    print(f'V-Measure: {v_measure:.3f}')
+
+
 def main():
     input_file = 'sample_abc.txt'
     output_file = '/Users/maheen/Desktop/cs senior seminar/result.txt'
@@ -220,16 +253,20 @@ def main():
     # midi = abc_to_midi(input_file, output_file)
     # #print(midi)
 
-    features = extract_features(midi_tunes)
-    #print(json.dumps(features, indent=4))
-    dataset, composers = create_dataset(features)
-    # print(dataset, cmposers)
+    # features = extract_features(midi_tunes)
+    # #print(json.dumps(features, indent=4))
+    # dataset, composers = create_dataset(features)
+    # # print(dataset, cmposers)
 
-    num_composers = 3
-    labels = k_means_clustering(dataset, num_composers)
-    print(labels)
+    # num_composers = 3
+    # labels = k_means_clustering(dataset, num_composers)
+    # for composer, label in zip(labels, composers):
+    #     print(f"{composer}: {label}")
 
-    visualize_clusters(dataset, labels, composers)
+
+    # evaluate_clustering(composers, labels, dataset)
+
+    # visualize_clusters(dataset, labels, composers)
 
 
 
