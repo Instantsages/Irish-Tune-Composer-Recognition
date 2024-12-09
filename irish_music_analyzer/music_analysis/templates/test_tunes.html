@@ -13,21 +13,21 @@
 
     <div class="container">
         <h1>Test Tunes</h1>
-        <button id="open-popup" class="btn">Add ABC Notation</button>
+        <button id="open-popup" class="btn">Upload ABC Notation</button>
     
         <!-- Modal Popup for ABC Notation Input -->
         <div id="abc-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
                 <h2>Enter ABC Notation</h2>
-                <textarea id="abc-input" rows="10" placeholder="Enter ABC notation here..."></textarea>
-                <button id="submit-abc" class="btn">Submit</button>
+                <textarea class="abc-input" id="abc-input" rows="10" placeholder="Enter ABC notation here..."></textarea>
+                <button id="submit-abc" class="btn">Upload</button>
             </div>
         </div>
     
         <!-- Container to display calculated features in a table -->
         <div id="features-container">
-            <h3>Calculated Feature Values</h3>
+            <p>Calculated Feature Values</p>
             <table id="features-table">
                 <thead>
                     <tr>
@@ -49,6 +49,12 @@
             <p id="composer-result">No inference performed yet.</p>
         </div>
     </div>
+
+    <!-- Home Button with Logo -->
+    <a href="{% url 'music_dashboard' %}" class="home-button">
+        <img src="{% static 'music_analysis/images/homeIcon.png' %}" alt="Home">
+    </a>
+
 
 <style>
     /* General Layout */
@@ -230,6 +236,7 @@
 
         // Function to create a 3D scatter plot with colors for each triplet and a legend
         function createPlot(triplet, data) {
+            
             const container = document.createElement('div');
             container.id = `plot-${triplet}`;
             container.style.width = '100%';
@@ -276,13 +283,13 @@
 
             // Convert traces object to an array for Plotly
             const plotTraces = Object.values(traces);
-
+            console.log(triplet);   // Debugging
             const layout = {
-                title: `3D Scatter Plot for ${triplet.replace('_', ', ')}`,
+                title: `3D Scatter Plot for ${triplet}`,
                 scene: {
-                    xaxis: { title: triplet.split('_')[0] },
-                    yaxis: { title: triplet.split('_')[1] },
-                    zaxis: { title: triplet.split('_')[2] }
+                    xaxis: { title: triplet.split(',')[0] },
+                    yaxis: { title: triplet.split(',')[1] },
+                    zaxis: { title: triplet.split(',')[2] }
                 }
             };
 

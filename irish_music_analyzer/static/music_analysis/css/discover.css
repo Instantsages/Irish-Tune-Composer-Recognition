@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
+    background-color: #000;
     margin: 0;
     padding: 0;
 }
@@ -9,7 +9,7 @@ body {
     width: 80%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #2b2b2b;
+    background-color: #F3E9DC;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     margin-top: 40px;
@@ -18,7 +18,7 @@ body {
 /* Page title */
 h1 {
     font-size: 28px;
-    color: #ffffff;
+    color: #C2A83E;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -26,7 +26,7 @@ h1 {
 /* Paragraph for explanations */
 p {
     font-size: 16px;
-    color: #ffffff;
+    color: #000;
     text-align: center;
     margin-bottom: 20px;
 }
@@ -34,7 +34,7 @@ p {
 /* Form elements */
 label {
     font-size: 14px;
-    color: #ffffff;
+    color: #000;
     display: block;
     margin-bottom: 5px;
 }
@@ -57,15 +57,15 @@ select:hover, button:hover {
     border-color: #bbb;
 }
 
-button {
-    background-color: #008CBA;
+.container button {
+    background-color: #7D7D7D;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #005f73;
+.container button:hover {
+    background-color: #C2A83E;
 }
 
 /* Error message */
@@ -106,7 +106,7 @@ a:hover {
     z-index: 1000;  /* Ensure the button stays on top of other content */
     width: 60px;  /* Diameter of the circle */
     height: 60px;  /* Same as width to make it a circle */
-    background-color: #008CBA;  /* Button background color */
+    background-color: #7D7D7D;  /* Button background color */
     border-radius: 50%;  /* Makes the button a perfect circle */
     display: flex;
     justify-content: center;
@@ -120,6 +120,6 @@ a:hover {
     object-fit: contain;  /* Ensures the logo fits inside the circle */
 }
 
-.home-button:hover {
-    background-color: #007bb5;  /* Darker background on hover */
-}
+a.home-button:hover {
+    background-color: #C2A83E;  /* Darker background on hover */
+} 

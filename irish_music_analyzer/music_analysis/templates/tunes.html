@@ -60,18 +60,50 @@
             gap: 10px;
             margin-bottom: 20px;
         }
-
-        #search-type, #search-query, #search-button {
+        #search-query {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 600px;
+            background-color: #fff;
+            color: rgb(0, 0, 0);
+        }
+        #search-type {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        #search-button {
+            padding: 8px 16px;
+            background-color: #7D7D7D;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #search-button:hover {
+            background-color: #C2A83E;
+        }
+        #add-new-tune-button {
+            background-color: #7D7D7D;
+            color: white;
+            padding: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-left: 300px;
+        }
+        #add-new-tune-button:hover {
+            background-color: #C2A83E;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Tunes List</h1>
+        <h1>Reels List</h1>
 
         <!-- Search Form -->
         <div class="search-bar">
@@ -79,7 +111,7 @@
                 <option value="name">Name</option>
                 <option value="composer">Composer</option>
             </select>
-            <input type="text" id="search-query" placeholder="Search tunes...">
+            <input type="text" id="search-query" placeholder="Search reels...">
             <button id="search-button">Search</button>
         </div>
 
@@ -99,7 +131,7 @@
         </ul>
 
         <!-- Button to open the "Add New Tune" popup -->
-        <button id="add-new-tune-button">Add New Tune</button>
+        <button id="add-new-tune-button">Add New Reel</button>
     </div>
 
     <!-- Add/Edit Tune Modal -->
@@ -118,7 +150,7 @@
 
     <!-- Home Button with Logo -->
     <a href="{% url 'music_dashboard' %}" class="home-button">
-        <img src="{% static 'music_analysis/images/home-icon.png' %}" alt="Home">
+        <img src="{% static 'music_analysis/images/homeIcon.png' %}" alt="Home">
     </a>
 
     <script>

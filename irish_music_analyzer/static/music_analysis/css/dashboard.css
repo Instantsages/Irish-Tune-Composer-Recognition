@@ -108,8 +108,8 @@ body {
 }
 
 .main-content h2 {
-    background-color: #ffffff;  /* Change this color to whatever you like */
-    color: rgb(0, 0, 0);            /* Text color to contrast with the background */
+    background-color: #F3E9DC;  /* Change this color to whatever you like */
+    color: #C2A83E;            /* Text color to contrast with the background */
     padding: 10px;           /* Add some padding for better spacing */
     border-radius: 4px;      /* Optional: Rounded corners */
     display: inline-block;   /* Make sure the background wraps only around the text */
@@ -129,6 +129,16 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/*.placeholder {
+    
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; /* Prevents the image from repeating 
+    width: 100%; /* Ensure the div spans the full width of its container 
+    height: 300px; /* Adjust height to your preference 
+    position: relative; /* Keeps child elements positioned correctly 
+}*/
+
 audio {
     width: 100%;
     max-width: 300px;
@@ -141,32 +151,80 @@ canvas {
     background-color: #000;
 }
 
-/* Mission Statement Section */
+/* Mission Statement Section 
 .mission-statement {
-    background-color: #f4f4f4;
-    /*padding: 40px;*/
+    background-color: #F3E9DC;
     margin-top: 60px;
-    margin-left: 270px;
+    margin-left: 290px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     color: #333;
     text-align: center;
     font-size: 18px;
-    width:  10px; /* Ensure it doesn’t overlap with sidebar */
+    width:  450px; 
 }
 
 .mission-statement h3 {
-    margin-left: 40px;       /* Adjust the margin to align with the sidebar */
+    margin-left: 10px;
     font-size: 100px;
-    color: #4CAF50;
+    color: #C2A83E;
     margin-bottom: 20px;
 }
 
 .mission-statement p {
-    margin-left: 40px;       /* Adjust the margin to align with the sidebar */
+    margin-left: 60px;      
     line-height: 1.6;
-    font-size: 32px;
-    color: #555;
+    font-size: 22px;
+    color: #000000;
+    margin: 0;
+}*/
+/* Wrapper to contain both sections side by side */
+.content-wrapper {
+    display: flex; /* Aligns the children side by side */
+    align-items: center; /* Vertically aligns them */
+    margin: 60px auto; /* Adjusts top margin and centers horizontally */
+    margin-right: 80px;
+    max-width: 1060px; /* Controls overall width */
+}
+
+/* Mission Statement Section */
+.mission-statement {
+    background-color: #F3E9DC;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-align: center;
+    font-size: 18px;
+    width: 60%; /* Adjust width to share space with McFadden */
+}
+
+.mission-statement h3 {
+    margin-left: 10px;
+    font-size: 100px;
+    color: #C2A83E;
+    margin-bottom: 20px;
+}
+
+.mission-statement p {
+    margin-left: 60px;      
+    line-height: 1.6;
+    font-size: 22px;
+    color: #000000;
     margin: 0;
 }
+
+/* McFadden Section */
+.mcfadden {
+    width: 45%; /* Takes up the remaining width */
+    text-align: center;
+}
+
+.mcfadden img {
+    width: 100%; /* Image fills the div */
+    height: auto; /* Maintains aspect ratio */
+    border-radius: 8px; /* Matches the mission-statement styling */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Matches the shadow style */
+}
+

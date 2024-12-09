@@ -7,6 +7,16 @@
     <title>Music Dashboard</title>
     <link rel="stylesheet" href="{% static 'music_analysis/css/dashboard.css' %}">
 </head>
+<style>
+    .placeholder {
+        background-image: url("{% static 'music_analysis/images/banner.png' %}");
+        background-position: center;
+        background-size: contain;
+        height: 300px;
+        width: 90%;
+        margin-left: 40px;
+    }
+</style>
 <body>
 
     <div class="header"></div>
@@ -18,7 +28,7 @@
 
     <div class="sidebar">
         <div class="logo-container">
-            <img src="{% static 'music_analysis/images/logo.png' %}" alt="Logo" class="logo-img"> 
+            <img src="{% static 'music_analysis/images/newLogo.png' %}" alt="Logo" class="logo-img"> 
             <h1 class="website-name">Irish Tuner</h1>
         </div>
         <ul>
@@ -50,15 +60,27 @@
                 Your browser does not support the audio element.
             </audio>
     
-            <!-- Canvas to display waveform -->
-            <canvas id="waveformCanvas"></canvas>
+            <!-- Canvas to display waveform 
+            <canvas id="waveformCanvas"></canvas> -->
         </div>
     </div>
 
-    <!-- Mission Statement Section -->
-    <div class="mission-statement">
-        <h3>Our Mission</h3>
-        <p>Our mission is to analyze the unique musical features of Irish Reels and use AI to classify user-uploaded music into the works of renowned Irish composers from recent decades, preserving the rich tradition and heritage of Irish music for future generations.</p>
+    <div class="content-wrapper">
+        <!-- Mission Statement Section -->
+        <div class="mission-statement">
+            <h3>Our Mission</h3>
+            <p>Our mission is to analyze the unique musical features of Irish Reels and use AI to classify user-uploaded music into the works of renowned Irish composers from recent decades, preserving the rich tradition and heritage of Irish music for future generations.</p>
+        </div>
+    
+        <!-- McFadden Section -->
+        <div class="mcfadden">
+            <img src="{% static 'music_analysis/images/mcfadden_picture.png' %}" alt="McFadden Image" />
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>Irish Tuner &copy; 2024</p>
     </div>
     
 

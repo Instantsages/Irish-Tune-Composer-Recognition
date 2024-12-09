@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{% static 'music_analysis/css/tunes.css' %}">
 
 <div class="modal-header">
-    <h2>{% if tune %}Edit Tune{% else %}Add New Tune{% endif %}</h2>
+    <h2>{% if tune %}Edit Reel{% else %}Add New Reel{% endif %}</h2>
     <span class="close-button" aria-label="Close">&times;</span>
 </div>
 <form method="POST" id="tune-form" action="{% if tune %}{% url 'tunes_edit' tune.pk %}{% else %}{% url 'tunes_add' %}{% endif %}">

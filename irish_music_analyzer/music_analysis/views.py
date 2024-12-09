@@ -548,7 +548,7 @@ def get_tune_comparisons(request):
             triplet_data['labels'].append("UserSubmitted")
             triplet_data['composer'].append("User")
 
-        data_for_triplets["_".join(triplet)] = triplet_data
+        data_for_triplets[", ".join(triplet)] = triplet_data
 
     # Return both features and plots in response
     return JsonResponse({
@@ -567,6 +567,7 @@ def make_inference(request):
     Returns:
         JsonResponse: JSON containing the predicted composer or an error message.
     """
+    print("Making inference")
     if request.method == "POST":
         abc_notation = request.POST.get("abc_notation", "").strip()
 
@@ -575,6 +576,7 @@ def make_inference(request):
 
         try:
             composer_name = get_inference(abc_notation)
+            print(f"Predicted composer: {composer_name}")
             return JsonResponse({"composer": composer_name})
 
         except Exception as e:

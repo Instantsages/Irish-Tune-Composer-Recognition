@@ -43,11 +43,14 @@
         color: #333;
         cursor: pointer;
     }
+    .close-button:hover {
+        color: #f44336;
+    }
 
     /* Consistent form actions button style */
     .form-actions button {
         padding: 10px 20px;
-        background-color: rgb(111, 145, 47);
+        background-color: #7D7D7D;
         border: none;
         border-radius: 5px;
         color: white;
@@ -55,7 +58,31 @@
     }
 
     .form-actions button:hover {
-        background-color: darkcyan;
+        background-color: #C2A83E;
+    }
+
+    /* Home button with logo */
+    a.home-button {
+        background-color: #7D7D7D;
+    }
+    a.home-button:hover {
+        background-color: #C2A83E;
+    }
+    .container.analysis-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .container.analysis-actions button:hover {
+        background-color: #C2A83E;
+    }
+    .container.analysis-actions button {
+        padding: 10px 20px;
+        background-color: #7D7D7D;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
     }
 </style>
 <body>
@@ -133,15 +160,17 @@
         <!-- Error message placeholder -->
         <p id="error-message" style="color: red; display: none;">You must select exactly three features (one for each axis).</p>
 
-        <!-- Button to trigger graph update -->
-        <button onclick="plotGraph()">3D Scatter Plot</button>
+        <div class="analysis-actions">
+            <!-- Button to trigger graph update -->
+            <button onclick="plotGraph()">3D Scatter Plot</button>
 
-        <!-- Button to trigger heatmap popup -->
-        <button id="heatmap-btn">Heatmap</button>
+            <!-- Button to trigger heatmap popup -->
+            <button id="heatmap-btn">Heatmap</button>
 
-        <!-- Button to trigger clustering popup -->
-        <button id="cluster-btn">Cluster</button>
-
+            <!-- Button to trigger clustering popup -->
+            <button id="cluster-btn">Cluster</button>
+        </div>
+        
         <!-- Graph Container -->
         <div id="graph-container" style="width: 98%; height: 500px;"></div>
 
@@ -179,7 +208,7 @@
 
     <!-- Home Button with Logo -->
     <a href="{% url 'music_dashboard' %}" class="home-button">
-        <img src="{% static 'music_analysis/images/home-icon.png' %}" alt="Home">
+        <img src="{% static 'music_analysis/images/homeIcon.png' %}" alt="Home">
     </a>
 
     <script>
