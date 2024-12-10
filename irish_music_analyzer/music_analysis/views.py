@@ -64,6 +64,23 @@ def discover(request):
     return render(request, 'discover.html')
 
 
+def about(request):
+    """
+    Renders the about page.
+
+    Parameters:
+    -----------
+    request : HttpRequest
+        The HTTP request object.
+
+    Returns:
+    --------
+    HttpResponse
+        Renders the 'about.html' template.
+    """
+    return render(request, 'about.html')
+
+
 def tunes(request):
     """
     Manages the display, creation, updating, and deletion of tunes.

@@ -17,4 +17,5 @@ urlpatterns = [
     path('calculate-features/', views.get_tune_feature_values, name='calculate_features'),
     path('get-tune-comparisons/', views.get_tune_comparisons, name='get_tune_comparisons'),
     path('make-inference/', views.make_inference, name='make_inference'),
+    path('about/', views.about, name='about'),
 ]
