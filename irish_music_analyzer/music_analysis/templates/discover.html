@@ -347,11 +347,13 @@
                 document.getElementById('cluster-container').innerHTML = '';
 
                 // Define colors for each cluster
-                const clusterColors = ['red', 'blue', 'green'];
+                const clusterColors = data.colorlist;
+                const colornum = clusterColors.length
 
                 // Create traces for each cluster
                 let traces = [];
-                for (let i = 0; i < 3; i++) {
+
+                for (let i = 0; i < colornum; i++) {
                     let clusterPoints = data.clusters.map((cluster, index) => cluster === i ? index : -1).filter(index => index !== -1);
                     
                     let trace = {

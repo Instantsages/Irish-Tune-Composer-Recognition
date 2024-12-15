@@ -156,6 +156,8 @@ def preprocess_abc_for_nn(abc_notation):
     """
     # Convert ABC notation to MIDI
     midi_tune = convert_abc_to_midi(abc_notation)
+    composer_num = len(midi_tune.keys())
+    print("There are", composer_num, "composers.")
     
     # Extract features
     features = extract_features([midi_tune])['unknown']
@@ -175,7 +177,7 @@ def preprocess_abc_for_nn(abc_notation):
 
     # Standardize the feature vector
     standardized_vector = scalar.transform(feature_vector)
-    return standardized_vector
+    return standardized_vector, composer_num
 
 
 def get_inference(abc_notation):
@@ -188,9 +190,11 @@ def get_inference(abc_notation):
     Returns:
         str: Predicted composer name.
     """
+    feature_vector, composer_num = preprocess_abc_for_nn(abc_notation)
+
     # Load the model
     input_size = 9  # Number of features used during training
-    model = ComposerNN(input_size, output_size=3)  # Adjust output_size if needed
+    model = ComposerNN(input_size, output_size=composer_num)  # Adjust output_size if needed
     model.load_state_dict(torch.load(MODEL_PATH))
     model.eval()
 
@@ -201,7 +205,7 @@ def get_inference(abc_notation):
     label_encoder = LabelEncoder()
     label_encoder.classes_ = np.load(LABEL_CLASSES_PATH)
 
-    feature_vector = preprocess_abc_for_nn(abc_notation)
+    
     with torch.no_grad():
         input_tensor = torch.tensor(feature_vector, dtype=torch.float32)
         output = model(input_tensor)

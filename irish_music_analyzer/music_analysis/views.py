@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans
 from itertools import combinations
 from .forms import TuneForm
 from .models import Tune
+import plotly.colors
 import numpy as np
 import pandas as pd
 import json
@@ -284,12 +285,25 @@ def get_musical_features_data(request):
         # Pass to pipeline to run the KMeans algorithm
         tunes_extracted_features = processing_pipeline(abc_notations)
 
+        composers = list(set(tune.composer for tune in tunes))
+        all_colors = plotly.colors.qualitative.Plotly + plotly.colors.qualitative.Set1 + plotly.colors.qualitative.Set2
+        
         # Composer Color Mapping
-        composer_color_mapping = {
-            'Sean Ryan': 'red',
-            'Paddy Fahey': 'yellow',
-            'Lizz Carrol': 'green'
-        }
+        composer_color_mapping={}
+        color_index=0
+
+        for current_composer in composers:
+            while color_index > len(all_colors) - 1:
+                color_index -= len(all_colors)
+            composer_color_mapping[current_composer]= all_colors[color_index]
+            color_index += 1
+
+        
+        # composer_color_mapping = {
+        #     'Sean Ryan': 'red',
+        #     'Paddy Fahey': 'yellow',
+        #     'Lizz Carrol': 'green'
+        # }
 
         # Initialize lists to hold the extracted features for X, Y, and Z axes
         x_data = []
@@ -365,9 +379,12 @@ def perform_clustering(request):
         # Prepare data for clustering (3D points based on selected features)
         features_data = np.array(list(zip(x_data, y_data, z_data)))
 
-        # Apply k-means clustering with 3 clusters
+        # Apply k-means clustering
         kmeans = KMeans(n_clusters=len(set(composers)), random_state=0)
         clusters = kmeans.fit_predict(features_data)
+
+        all_colors = plotly.colors.qualitative.Plotly + plotly.colors.qualitative.Set1 + plotly.colors.qualitative.Set2
+        current_colors = all_colors[:len(set(composers))]
 
         # Prepare the response data
         response_data = {
@@ -375,7 +392,8 @@ def perform_clustering(request):
             'y': y_data,              # Y-axis data
             'z': z_data,              # Z-axis data
             'clusters': clusters.tolist(),  # Cluster assignment for each tune
-            'composers': composers          # Composer names for hover info
+            'composers': composers,          # Composer names for hover info
+            'colorlist': current_colors      # Colors to plot with
         }
 
         return JsonResponse(response_data)
