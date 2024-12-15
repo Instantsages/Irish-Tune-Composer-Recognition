@@ -366,7 +366,7 @@ def perform_clustering(request):
         features_data = np.array(list(zip(x_data, y_data, z_data)))
 
         # Apply k-means clustering with 3 clusters
-        kmeans = KMeans(n_clusters=3, random_state=0)
+        kmeans = KMeans(n_clusters=len(set(composers)), random_state=0)
         clusters = kmeans.fit_predict(features_data)
 
         # Prepare the response data

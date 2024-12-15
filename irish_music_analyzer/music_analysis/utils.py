@@ -55,10 +55,13 @@ def processing_pipeline(tunes_tuples):
     """
     tunes_extracted_features = {}
     for tune_name, tune_composer, abc_notation in tunes_tuples:
-        midi = converter.parse(abc_notation)
-        features = extract_features(midi)
-        tunes_extracted_features[tune_name] = features
-        tunes_extracted_features[tune_name]['composer'] = tune_composer
+        try:
+            midi = converter.parse(abc_notation.strip())
+            features = extract_features(midi)
+            tunes_extracted_features[tune_name] = features
+            tunes_extracted_features[tune_name]['composer'] = tune_composer
+        except:
+            print(f"Warning: An error occurred for tune: {tune_name}; composer: {tune_composer}")
         
     return tunes_extracted_features
 
