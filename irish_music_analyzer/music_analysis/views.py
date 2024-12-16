@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.metrics import pairwise_distances
 from itertools import combinations
 from .forms import TuneForm
 from .models import Tune
@@ -618,3 +620,123 @@ def make_inference(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+def perform_clustering_2(request):
+    """
+    Perform PCA on extracted features and apply K-means clustering, including user-uploaded tune.
+    """
+    # Get user-uploaded ABC notation (if any)
+    user_abc_notation = request.GET.get('abc_notation', None)
+
+    # Extract tunes and process features
+    tunes = Tune.objects.all()
+    features = processing_pipeline([(tune.name, tune.composer, tune.abc_notation) for tune in tunes])
+
+    # Prepare data for PCA
+    feature_names = ['notes', 'rests', 'chords', 'avg_pitch', 'pitch_range', 'duration_sd', 'pitches_len', 'avg_duration',
+                     'duration_range', 'duration_sd', 'total_duration', 'avg_interval', 'interval_range', 'interval_sd']    
+    data_matrix = []
+    composers = []
+    labels = []
+    for tune_name, feature_data in features.items():
+        row = [feature_data[feature] for feature in feature_names]
+        data_matrix.append(row)
+        composers.append(feature_data['composer'])
+        labels.append(tune_name)
+
+    user_index = None
+    # Process the user-uploaded ABC notation
+    if user_abc_notation:
+        user_features = processing_pipeline([('UserSubmitted', 'User', user_abc_notation)])['UserSubmitted']
+        user_row = [user_features[feature] for feature in feature_names]
+        data_matrix.append(user_row)
+        composers.append('User')
+        labels.append('UserSubmitted')
+        user_index = len(labels) - 1  # Store index of user-uploaded tune
+
+    # Convert to NumPy array
+    data_matrix = np.array(data_matrix)
+
+    # Apply PCA to reduce to 3 dimensions
+    pca = PCA(n_components=3)
+    pca_features = pca.fit_transform(data_matrix)
+
+    # Apply K-means clustering
+    kmeans = KMeans(n_clusters=9, random_state=0)
+    clusters = kmeans.fit_predict(pca_features)
+
+    # Prepare response data
+    return JsonResponse({
+        'x': pca_features[:, 0].tolist(),
+        'y': pca_features[:, 1].tolist(),
+        'z': pca_features[:, 2].tolist(),
+        'clusters': clusters.tolist(),
+        'composers': composers,
+        'labels': labels,
+        'user_index': user_index,  # Explicitly mark the user-uploaded tune
+        'explained_variance_ratio': pca.explained_variance_ratio_.tolist()  # For debugging/analysis
+    })
+
+# def perform_clustering_2(request):
+#     if request.method == 'POST':
+#         # Parse JSON to get features
+#         body = json.loads(request.body)
+#         abc_notation = body.get('abc_notation')
+
+#         # Fetch all tunes
+#         tunes = Tune.objects.all()
+#         abc_notations = [(tune.name, tune.composer, tune.abc_notation) for tune in tunes]
+
+#         # Extract features using processing_pipeline
+#         features = processing_pipeline(abc_notations)
+
+#         # Add user-uploaded tune features
+#         uploaded_features = processing_pipeline([('UserUploaded', 'User', abc_notation)])['UserUploaded']
+
+#         # Create dataset for clustering
+#         X = np.array([
+#             [feat['avg_pitch'], feat['pitch_range'], feat['duration_sd']]
+#             for feat in features.values()
+#         ])
+#         X = np.vstack((X, [
+#             uploaded_features['avg_pitch'],
+#             uploaded_features['pitch_range'],
+#             uploaded_features['duration_sd'],
+#             uploaded_features['notes'],
+#             uploaded_features['rests'],
+#             uploaded_features['chords'],
+#             uploaded_features['pitches_len'],
+#             uploaded_features['avg_duration'],
+#             uploaded_features['duration_range'],
+#             uploaded_features['total_duration'],
+#             uploaded_features['avg_interval'],
+#             uploaded_features['interval_range'],
+#             uploaded_features['interval_sd'],
+#             uploaded_features['duration_sd'],
+#         ]))  # Add the user-uploaded tune to the dataset
+
+#         # Perform PCA to reduce dimensions
+#         pca = PCA(n_components=3)
+#         X_pca = pca.fit_transform(X)
+
+#         # Perform KMeans clustering
+#         kmeans = KMeans(n_clusters=9, random_state=0)
+#         clusters = kmeans.fit_predict(X_pca)
+
+#         # Find distances between user-uploaded tune and cluster centroids
+#         user_point = X_pca[-1]
+#         distances = pairwise_distances([user_point], kmeans.cluster_centers_).flatten()
+
+#         # Prepare response data
+#         response_data = {
+#             'x': X_pca[:, 0].tolist(),
+#             'y': X_pca[:, 1].tolist(),
+#             'z': X_pca[:, 2].tolist(),
+#             'clusters': clusters.tolist(),
+#             'composers': [*features.keys(), 'User'],
+#             'distances': distances.tolist(),  # Distances to each cluster centroid
+#             'cluster_labels': [f'Cluster {i}' for i in range(9)]
+#         }
+
+#         return JsonResponse(response_data)

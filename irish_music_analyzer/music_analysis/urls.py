@@ -18,4 +18,5 @@ urlpatterns = [
     path('get-tune-comparisons/', views.get_tune_comparisons, name='get_tune_comparisons'),
     path('make-inference/', views.make_inference, name='make_inference'),
     path('about/', views.about, name='about'),
+    path('perform-clustering-2/', views.perform_clustering_2, name='perform-clustering-2'),
 ]

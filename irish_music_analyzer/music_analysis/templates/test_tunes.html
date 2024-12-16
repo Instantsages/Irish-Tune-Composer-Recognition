@@ -24,7 +24,7 @@
                 <button id="submit-abc" class="btn">Upload</button>
             </div>
         </div>
-    
+        
         <!-- Container to display calculated features in a table -->
         <div id="features-container">
             <p>Calculated Feature Values</p>
@@ -39,6 +39,11 @@
                     <!-- Feature values will be dynamically added here -->
                 </tbody>
             </table>
+        </div>
+
+        <div id="clustering-container">
+            <h3>Clustering Analysis (PCA-based)</h3>
+            <div id="clustering-plot"></div>
         </div>
 
         <div id="plots-container"></div>
@@ -114,6 +119,25 @@
         font-size: 18px;
         color: #333;
     }
+    #clustering-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    }
+
+    #clustering-container h3 {
+        font-size: 22px;
+        color: #C2A83E;
+        margin-bottom: 15px;
+    }
+
+    #clustering-plot {
+        width: 100%;
+        height: 500px;
+    }
+
 </style>
 
 <script>
@@ -160,6 +184,9 @@
 
             // Close the modal after submission
             abcModal.style.display = 'none';
+
+            // Render clustering graph with the uploaded ABC notation
+            fetchAndRenderClusteringGraph(abcNotation);
 
             // Fetch feature data with the user-uploaded abc_notation
             const inferenceUrl = `/make-inference/`;
@@ -318,6 +345,104 @@
             }
             return cookieValue;
         }
+
+        function fetchAndRenderClusteringGraph(abcNotation) {
+            const clusteringUrl = `/perform-clustering-2/?abc_notation=${encodeURIComponent(abcNotation)}`;
+
+            fetch(clusteringUrl, {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Prepare traces for each cluster
+                    const traces = {};
+                    const userTuneIndex = data.user_index; // Index of the uploaded tune
+
+                    // Define colors for the 9 clusters
+                    const clusterColors = [
+                        'red', 'blue', 'green', 'orange', 'purple',
+                        'cyan', 'magenta', 'yellow', 'gray'
+                    ];
+
+                    data.clusters.forEach((cluster, index) => {
+                        const composer = data.composers[index] || 'Unknown';
+                        const isUserTune = index === userTuneIndex;
+                        console.log(isUserTune);  // Debugging
+
+                        if (!traces[cluster]) {
+                            traces[cluster] = {
+                                x: [],
+                                y: [],
+                                z: [],
+                                mode: 'markers',
+                                type: 'scatter3d',
+                                name: `Cluster ${cluster}`,
+                                marker: {
+                                    size: 5, // Larger marker for user-uploaded tune
+                                    color: clusterColors[cluster], // Unique color for user-uploaded tune
+                                    symbol: 'circle' // Star marker for user-uploaded tune
+                                },
+                                text: [] // Tooltip for tune labels
+                            };
+                        }
+
+                        traces[cluster].x.push(data.x[index]);
+                        traces[cluster].y.push(data.y[index]);
+                        traces[cluster].z.push(data.z[index]);
+
+                        // Tooltip
+                        const tooltipText = isUserTune ? `User Uploaded` : composer;
+
+                        traces[cluster].text.push(tooltipText);
+
+                        // Special styling for the user-uploaded tune
+                        if (isUserTune) {
+                            traces[cluster].marker.size = 8; // Slightly larger size for all tunes in this cluster
+                            traces[cluster].marker.color = clusterColors[cluster]; // Keep the same cluster color
+                            traces[cluster].marker.symbol = 'triangle'; // Different symbol for the user-uploaded tune
+                        }
+                        //traces[cluster].text.push(composer);
+                    });
+
+                    const plotTraces = Object.values(traces);
+
+                    const layout = {
+                        title: 'PCA Clustering Analysis (with Uploaded Tune)',
+                        scene: {
+                            xaxis: { title: 'PCA Component 1' },
+                            yaxis: { title: 'PCA Component 2' },
+                            zaxis: { title: 'PCA Component 3' }
+                        }
+                    };
+
+                    Plotly.newPlot('clustering-plot', plotTraces, layout);
+
+                    // Plot distances
+                    //plotDistances(data.distances, data.cluster_labels);
+                })
+                .catch(error => console.error('Error fetching clustering graph data:', error));
+        }
+
+
+        // submitButton.onclick = function() {
+        //     const abcNotation = abcInput.value.trim();
+
+        //     if (!abcNotation) {
+        //         alert("Please enter valid ABC notation.");
+        //         return;
+        //     }
+
+        //     // Close the modal after submission
+        //     abcModal.style.display = 'none';
+
+        //     // Render clustering graph with the uploaded ABC notation
+        //     fetchAndRenderClusteringGraph(abcNotation);
+
+        // };
+
     });
 
 </script>
