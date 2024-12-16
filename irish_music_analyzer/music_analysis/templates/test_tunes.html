@@ -246,11 +246,17 @@
 
             // Color and symbol mapping for composers and user-uploaded notation
             const colorMapping = {
-                'Lizz Carrol': { color: 'red', symbol: 'circle' },
-                'Paddy Fahey': { color: 'blue', symbol: 'square' },
-                'Sean Ryan': { color: 'green', symbol: 'diamond' },
-                'User': { color: 'purple', symbol: 'diamond' },  // Unique color and symbol for user-uploaded notation
-                'unknown': { color: 'gray', symbol: 'circle' }
+                'Lizz Carrol': { color: 'red', symbol: 'circle', size: 3},
+                'Paddy Fahey': { color: 'blue', symbol: 'circle', size: 3 },
+                'Sean Ryan': { color: 'green', symbol: 'circle', size: 3 },
+                'Ed Reavy': { color: 'orange', symbol: 'circle', size: 3 },
+                'Paddy O\'Brien': { color: 'brown', symbol: 'circle', size: 3 },
+                'Joe Liddy': { color: 'pink', symbol: 'circle', size: 3 },
+                'Vincent Broderick': { color: 'olive', symbol: 'circle', size: 3 },
+                'Richard Dwyer': { color: 'cyan', symbol: 'circle', size: 3 },
+                'Brendan Tonra': { color: 'yellow', symbol: 'circle', size: 3 },
+                'User': { color: 'purple', symbol: 'diamond', size: 6 },  // Unique color and symbol for user-uploaded notation
+                'unknown': { color: 'gray', symbol: 'circle', size: 3 }
             };
 
             // Group data by composer to create separate traces
@@ -268,7 +274,7 @@
                         type: 'scatter3d',
                         name: traceName,  // Legend label for each composer
                         marker: {
-                            size: 6,
+                            size: featureSet.size,
                             color: featureSet.color,
                             symbol: featureSet.symbol
                         },
