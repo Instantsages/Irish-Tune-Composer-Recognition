@@ -1,12 +1,15 @@
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.cluster import KMeans
 from music21 import converter
+import traceback  # Import traceback for detailed error messages
 import numpy as np
 import torch
+import os
 
 
 # Load model, scaler, and label encoder once to reuse for multiple requests
-MODEL_PATH = "best.pth"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__)) 
+MODEL_PATH =  os.path.join(SCRIPT_DIR, 'best_model.pth') 
 SCALAR_MEAN_PATH = "scalar_mean.npy"
 SCALAR_SCALE_PATH = "scalar_scale.npy"
 LABEL_CLASSES_PATH = "label_classes.npy"
@@ -144,7 +147,7 @@ def convert_abc_to_midi(abc_tunes):
     return midi_tunes
 
 
-def preprocess_abc_for_nn(abc_notation):
+def preprocess_abc_for_nn(abc_notation, scalar):
     """
     Preprocess ABC notation into standardized feature vector.
 
@@ -155,12 +158,20 @@ def preprocess_abc_for_nn(abc_notation):
         np.ndarray: Standardized feature vector.
     """
     # Convert ABC notation to MIDI
-    midi_tune = convert_abc_to_midi(abc_notation)
+    #abc_tune = abc_notation.split("\n")
+    #composer = abc_tune[3].split(":")[1].strip()
+    #abc_notation = "\n".join(abc_tune[1:])
+    #print(abc_notation, composer)
+
+
+    midi_tune = convert_abc_to_midi({'unknown':[abc_notation]})
     composer_num = len(midi_tune.keys())
     print("There are", composer_num, "composers.")
     
     # Extract features
-    features = extract_features([midi_tune])['unknown']
+    #print(midi_tune)
+    features = extract_features(midi_tune['unknown'][0])
+    print(features)
 
     # Create a feature vector
     feature_vector = np.array([
@@ -176,8 +187,8 @@ def preprocess_abc_for_nn(abc_notation):
     ]).reshape(1, -1)  # Reshape to 2D array for scaling
 
     # Standardize the feature vector
-    standardized_vector = scalar.transform(feature_vector)
-    return standardized_vector, composer_num
+    #standardized_vector = scalar.fit_transform(feature_vector)
+    return feature_vector, composer_num
 
 
 def get_inference(abc_notation):
@@ -190,24 +201,42 @@ def get_inference(abc_notation):
     Returns:
         str: Predicted composer name.
     """
-    feature_vector, composer_num = preprocess_abc_for_nn(abc_notation)
+    print("Startinnng...............")
+    # Preprocess ABC notation (extract features)
+    try:
+        # Load StandardScaler
+        scalar = StandardScaler()
+        #scalar.mean_ = np.load(SCALAR_MEAN_PATH)
+        #scalar.scale_ = np.load(SCALAR_SCALE_PATH)
+        
+        feature_vector, composer_num = preprocess_abc_for_nn(abc_notation, scalar)  # Assuming function exists
 
-    # Load the model
-    input_size = 9  # Number of features used during training
-    model = ComposerNN(input_size, output_size=composer_num)  # Adjust output_size if needed
-    model.load_state_dict(torch.load(MODEL_PATH))
-    model.eval()
+        # Standardize the input feature vector
+        standardized_features = scalar.fit_transform(feature_vector)  # Input reshaped for scaler
 
-    # Load the StandardScaler and LabelEncoder
-    scalar = StandardScaler()
-    scalar.mean_ = np.load(SCALAR_MEAN_PATH)
-    scalar.scale_ = np.load(SCALAR_SCALE_PATH)
-    label_encoder = LabelEncoder()
-    label_encoder.classes_ = np.load(LABEL_CLASSES_PATH)
+        # Load LabelEncoder
+        Label_Encoder = LabelEncoder()
+        label_encoder = Label_Encoder.fit(['Liz Carrol', 'Michael Coleman', "Paddy O'Brien", 'Tommy Peoples', 'Martin Hayes', 'Kevin Burke', 'Sean Ryan', 'Matt Molloy', 'Unknown'])
+        print(label_encoder)
 
-    
-    with torch.no_grad():
-        input_tensor = torch.tensor(feature_vector, dtype=torch.float32)
-        output = model(input_tensor)
-        predicted_label = torch.argmax(output, dim=1).item()
-        return label_encoder.inverse_transform([predicted_label])[0]
+        # Load the trained model
+        input_size = 9  # Number of input features
+        output_size = 9
+        model = ComposerNN(input_size, output_size)
+        model.load_state_dict(torch.load(MODEL_PATH))
+        model.eval()
+
+        print("Model loaded successfully...............")
+        # Perform inference
+        with torch.no_grad():
+            input_tensor = torch.tensor(standardized_features, dtype=torch.float32)
+            output = model(input_tensor)
+            predicted_label = torch.argmax(output, dim=1).item()
+            predicted_composer = label_encoder.inverse_transform([predicted_label])[0]
+    except Exception as e:
+        # Print a detailed traceback of the error
+        print("An error occurred:")
+        traceback.print_exc()  # Print the full traceback for debugging
+        predicted_composer = "Unknown"
+
+    return predicted_composer
