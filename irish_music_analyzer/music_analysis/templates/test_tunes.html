@@ -107,7 +107,6 @@
         width: 100%;
         height: 500px;
     }
-
     #composer-inference-container {
         margin-top: 20px;
         padding: 15px;
@@ -126,13 +125,11 @@
     border-radius: 8px;
     border: 1px solid #ccc;
     }
-
     #clustering-container h3 {
         font-size: 22px;
         color: #C2A83E;
         margin-bottom: 15px;
     }
-
     #clustering-plot {
         width: 100%;
         height: 500px;
@@ -317,7 +314,6 @@
 
             // Convert traces object to an array for Plotly
             const plotTraces = Object.values(traces);
-            console.log(triplet);   // Debugging
             const layout = {
                 title: `3D Scatter Plot for ${triplet}`,
                 scene: {
@@ -370,7 +366,6 @@
                     data.clusters.forEach((cluster, index) => {
                         const composer = data.composers[index] || 'Unknown';
                         const isUserTune = index === userTuneIndex;
-                        console.log(isUserTune);  // Debugging
 
                         if (!traces[cluster]) {
                             traces[cluster] = {
@@ -404,7 +399,6 @@
                             traces[cluster].marker.color = clusterColors[cluster]; // Keep the same cluster color
                             traces[cluster].marker.symbol = 'triangle'; // Different symbol for the user-uploaded tune
                         }
-                        //traces[cluster].text.push(composer);
                     });
 
                     const plotTraces = Object.values(traces);
@@ -419,34 +413,11 @@
                     };
 
                     Plotly.newPlot('clustering-plot', plotTraces, layout);
-
-                    // Plot distances
-                    //plotDistances(data.distances, data.cluster_labels);
                 })
                 .catch(error => console.error('Error fetching clustering graph data:', error));
         }
-
-
-        // submitButton.onclick = function() {
-        //     const abcNotation = abcInput.value.trim();
-
-        //     if (!abcNotation) {
-        //         alert("Please enter valid ABC notation.");
-        //         return;
-        //     }
-
-        //     // Close the modal after submission
-        //     abcModal.style.display = 'none';
-
-        //     // Render clustering graph with the uploaded ABC notation
-        //     fetchAndRenderClusteringGraph(abcNotation);
-
-        // };
-
     });
 
 </script>
 </body>
 </html>
-
-

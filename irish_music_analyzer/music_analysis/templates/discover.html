@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}  <!-- Load the static files -->
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -253,7 +253,7 @@
                     marker: {
                         size: 5,
                         color: data.composerColorMapping,  // Use the values of the selected color feature for coloring
-                        colorscale: 'Viridis',  // Choose a color scale (you can customize this)
+                        colorscale: 'Viridis',
                     },
                     name: `${xFeature} vs ${yFeature} vs ${zFeature}`,
                     text: data.labels,  // Use tune names for labels
@@ -308,8 +308,6 @@
 
                 let layout = {
                     title: 'Feature Correlation Heatmap',
-                    //xaxis: { title: 'Features' },
-                    //yaxis: { title: 'Features' }
                 };
 
                 // Render the heatmap in the heatmap-container div
@@ -426,22 +424,9 @@
             document.getElementById('heatmap-popup').classList.remove('show');
         }
 
-        // Function to show the clustering popup
-        // function openPopup() {
-        //     document.getElementById('cluster-popup').style.display = 'block';
-        // }
-
-        // // Function to close the clustering popup
-        // function closePopup() {
-        //     document.getElementById('cluster-popup').style.display = 'none';
-        // }
-
         // Attach event listener to Cluster button to open the popup
         document.getElementById('cluster-btn').addEventListener('click', openClusterPopup);
         document.getElementById('heatmap-btn').addEventListener('click', openHeatmapPopup);
     </script>
-
-
-   
 </body>
 </html>

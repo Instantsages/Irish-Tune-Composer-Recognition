@@ -300,13 +300,6 @@ def get_musical_features_data(request):
             composer_color_mapping[current_composer]= all_colors[color_index]
             color_index += 1
 
-        
-        # composer_color_mapping = {
-        #     'Sean Ryan': 'red',
-        #     'Paddy Fahey': 'yellow',
-        #     'Lizz Carrol': 'green'
-        # }
-
         # Initialize lists to hold the extracted features for X, Y, and Z axes
         x_data = []
         y_data = []
@@ -390,12 +383,12 @@ def perform_clustering(request):
 
         # Prepare the response data
         response_data = {
-            'x': x_data,              # X-axis data
-            'y': y_data,              # Y-axis data
-            'z': z_data,              # Z-axis data
+            'x': x_data,                    # X-axis data
+            'y': y_data,                    # Y-axis data
+            'z': z_data,                    # Z-axis data
             'clusters': clusters.tolist(),  # Cluster assignment for each tune
-            'composers': composers,          # Composer names for hover info
-            'colorlist': current_colors      # Colors to plot with
+            'composers': composers,         # Composer names for hover info
+            'colorlist': current_colors     # Colors to plot with
         }
 
         return JsonResponse(response_data)
@@ -624,7 +617,28 @@ def make_inference(request):
 
 def perform_clustering_2(request):
     """
-    Perform PCA on extracted features and apply K-means clustering, including user-uploaded tune.
+    Perform PCA on extracted features and apply K-means clustering, optionally including user-uploaded ABC notation.
+
+    This function processes the ABC notation data stored in the database, extracts relevant musical features,
+    and performs dimensionality reduction (PCA) followed by K-means clustering. If the user provides additional
+    ABC notation, its features are processed, included in the analysis, and explicitly marked in the results.
+
+    Args:
+        request: Django HTTP request object. Supports the optional GET parameter 'abc_notation' containing
+                 user-uploaded ABC notation.
+
+    Returns:
+        JsonResponse: A JSON object containing:
+            - x, y, z: Coordinates of PCA-reduced features for visualization.
+            - clusters: Cluster assignments for each tune after K-means clustering.
+            - composers: List of composers corresponding to the tunes.
+            - labels: List of tune labels (names).
+            - user_index: Index of user-uploaded ABC notation in the results (if provided).
+            - explained_variance_ratio: Variance explained by each PCA component.
+
+    Notes:
+        - PCA reduces the data to 3 dimensions for visualization purposes.
+        - K-means clustering groups tunes into 9 clusters.
     """
     # Get user-uploaded ABC notation (if any)
     user_abc_notation = request.GET.get('abc_notation', None)
@@ -677,66 +691,3 @@ def perform_clustering_2(request):
         'user_index': user_index,  # Explicitly mark the user-uploaded tune
         'explained_variance_ratio': pca.explained_variance_ratio_.tolist()  # For debugging/analysis
     })
-
-# def perform_clustering_2(request):
-#     if request.method == 'POST':
-#         # Parse JSON to get features
-#         body = json.loads(request.body)
-#         abc_notation = body.get('abc_notation')
-
-#         # Fetch all tunes
-#         tunes = Tune.objects.all()
-#         abc_notations = [(tune.name, tune.composer, tune.abc_notation) for tune in tunes]
-
-#         # Extract features using processing_pipeline
-#         features = processing_pipeline(abc_notations)
-
-#         # Add user-uploaded tune features
-#         uploaded_features = processing_pipeline([('UserUploaded', 'User', abc_notation)])['UserUploaded']
-
-#         # Create dataset for clustering
-#         X = np.array([
-#             [feat['avg_pitch'], feat['pitch_range'], feat['duration_sd']]
-#             for feat in features.values()
-#         ])
-#         X = np.vstack((X, [
-#             uploaded_features['avg_pitch'],
-#             uploaded_features['pitch_range'],
-#             uploaded_features['duration_sd'],
-#             uploaded_features['notes'],
-#             uploaded_features['rests'],
-#             uploaded_features['chords'],
-#             uploaded_features['pitches_len'],
-#             uploaded_features['avg_duration'],
-#             uploaded_features['duration_range'],
-#             uploaded_features['total_duration'],
-#             uploaded_features['avg_interval'],
-#             uploaded_features['interval_range'],
-#             uploaded_features['interval_sd'],
-#             uploaded_features['duration_sd'],
-#         ]))  # Add the user-uploaded tune to the dataset
-
-#         # Perform PCA to reduce dimensions
-#         pca = PCA(n_components=3)
-#         X_pca = pca.fit_transform(X)
-
-#         # Perform KMeans clustering
-#         kmeans = KMeans(n_clusters=9, random_state=0)
-#         clusters = kmeans.fit_predict(X_pca)
-
-#         # Find distances between user-uploaded tune and cluster centroids
-#         user_point = X_pca[-1]
-#         distances = pairwise_distances([user_point], kmeans.cluster_centers_).flatten()
-
-#         # Prepare response data
-#         response_data = {
-#             'x': X_pca[:, 0].tolist(),
-#             'y': X_pca[:, 1].tolist(),
-#             'z': X_pca[:, 2].tolist(),
-#             'clusters': clusters.tolist(),
-#             'composers': [*features.keys(), 'User'],
-#             'distances': distances.tolist(),  # Distances to each cluster centroid
-#             'cluster_labels': [f'Cluster {i}' for i in range(9)]
-#         }
-
-#         return JsonResponse(response_data)
